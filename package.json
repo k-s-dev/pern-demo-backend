@@ -1,0 +1,36 @@
+{
+  "name": "Node Typescript Starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/main.js",
+  "scripts": {
+    "lint": "npx eslint ./src/.",
+    "format": "npx prettier ./src/.",
+    "env:prod": "npx cross-env NODE_ENV=production",
+    "env:dev": "npx cross-env NODE_ENV=development",
+    "build": "npm run env:prod -- npx tsc && npx tsc-alias",
+    "start": "npm run env:prod -- node dist/app.js",
+    "dev": "npm run env:dev -- tsx --watch src/app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^25.0.10",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.0.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.0",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.1"
+  },
+  "dependencies": {
+    "cross-env": "^10.1.0",
+    "@dotenvx/dotenvx": "^1.51.4"
+  }
+}
