@@ -20,6 +20,7 @@ npm install
   - middleware
     - `cors`
     - `helmet`: http headers settings
+    - logger: `pino`
 
 #### Express
 
@@ -36,3 +37,11 @@ npm install --save-dev \
 ```
 
 Setup express app with minimal middleware, routes and error-handler.
+
+#### Logger
+
+```bash
+npm install pino-http pino-pretty
+```
+
+Setup logger service ([pino](https://getpino.io/#/docs/web?id=pino-with-express)).
