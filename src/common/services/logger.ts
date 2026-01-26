@@ -7,13 +7,16 @@ const transport = pino.transport({
   targets: [
     {
       target: "pino/file",
+      level: "error",
       options: { destination: `${rootDir}/server.log` },
     },
     {
       target: config.nodeEnv === "development" ? "pino-pretty" : "pino/file",
+      level: config.nodeEnv === "development" ? "debug" : "error",
       options: {
         destination: 1,
         colorize: true,
+        singleLine: true,
       },
     },
   ],
@@ -21,7 +24,6 @@ const transport = pino.transport({
 
 export const logger = pino(
   {
-    level: config.nodeEnv === "development" ? "debug" : "error",
     timestamp: pino.stdTimeFunctions.isoTime,
   },
   transport,
