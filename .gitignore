@@ -1,3 +1,9 @@
+# custom
+
+## prisma
+src/prisma/generated/
+*.env*
+
 # Logs
 logs
 *.log
