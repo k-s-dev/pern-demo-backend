@@ -1,6 +1,6 @@
 import * as express from "express";
-import { ApiError } from "../definitions/error.js";
-import { logger } from "../services/logger.js";
+import { logger } from "../logger/service.js";
+import { ApiError } from "./definitions.js";
 
 export function errorHandler(
   err: Error,

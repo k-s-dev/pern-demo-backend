@@ -1,9 +1,6 @@
 import { apiRouter } from "@/modules/api/routes.js";
 import { Router } from "express";
-import {
-  ApiAuthenticationError,
-  ApiValidationError,
-} from "./definitions/error.js";
+import { ApiValidationError } from "./error/definitions.js";
 
 export const appRouter = Router();
 

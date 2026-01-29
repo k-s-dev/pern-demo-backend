@@ -5,12 +5,8 @@ import {
   type Response,
 } from "express";
 import * as v from "valibot";
-import { ApiValidationError } from "../definitions/error.js";
-
-type ValibotObjectSchema = v.ObjectSchema<
-  v.ObjectEntries,
-  v.ErrorMessage<v.ObjectIssue>
->;
+import type { ValibotObjectSchema } from "./definitions.js";
+import { ApiValidationError } from "../error/definitions.js";
 
 export const validateBody = <GenericBodySchema extends ValibotObjectSchema>(
   schema: GenericBodySchema,

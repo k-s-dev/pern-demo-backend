@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
-import { errorHandler } from "./common/middleware/errorHandler.js";
 import helmet from "helmet";
 import { appRouter } from "./common/routes.js";
 import { pinoHttp } from "pino-http";
-import { logger } from "./common/services/logger.js";
+import { logger } from "./common/logger/service.js";
+import { errorHandler } from "./common/error/errorHandler.js";
 
 const app = express();
 
