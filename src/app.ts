@@ -6,7 +6,7 @@ import { pinoHttp } from "pino-http";
 import { logger } from "./common/logger/service.js";
 import { errorHandler } from "./common/error/errorHandler.js";
 
-const app = express();
+export const app = express();
 
 // middleware
 app.use(pinoHttp({ logger }));

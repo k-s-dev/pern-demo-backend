@@ -3,14 +3,16 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import { defineConfig } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
+import vitest from "@vitest/eslint-plugin";
 
 export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    plugins: { js },
+    plugins: { js, vitest },
     extends: ["js/recommended"],
     languageOptions: { globals: globals.node },
   },
   tseslint.configs.recommended,
   eslintConfigPrettier,
+  vitest.configs.recommended,
 ]);

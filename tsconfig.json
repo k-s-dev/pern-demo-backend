@@ -47,10 +47,14 @@
       "@/*": [
         "src/*"
       ]
-    }
+    },
+    // vitest
+    "types": [
+      "node",
+      "vitest/globals"
+    ]
   },
   "include": [
     "src/**/*.ts"
   ]
 }
-
