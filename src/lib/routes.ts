@@ -1,6 +1,6 @@
-import { apiRouter } from "@/modules/api/routes.js";
 import { Router } from "express";
 import { ApiValidationError } from "./error/definitions.js";
+import { apiRouter } from "@/api/lib/routes.js";
 
 export const appRouter = Router();
 

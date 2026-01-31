@@ -1,15 +1,21 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { appRouter } from "./common/routes.js";
 import { pinoHttp } from "pino-http";
-import { logger } from "./common/logger/service.js";
-import { errorHandler } from "./common/error/errorHandler.js";
+import { toNodeHandler } from "better-auth/node";
+import { logger } from "./lib/logger/service.js";
+import { nextDemoApiAuth } from "./api/nextDemo/lib/auth/auth.js";
+import { appRouter } from "./lib/routes.js";
+import { errorHandler } from "./lib/error/errorHandler.js";
 
 export const app = express();
 
 // middleware
 app.use(pinoHttp({ logger }));
+
+// has to be before parser middleware (express.json)
+app.all('/api/auth/{*any}', toNodeHandler(nextDemoApiAuth));
+
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
