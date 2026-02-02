@@ -2,7 +2,7 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -44,6 +44,9 @@
     "moduleResolution": "nodenext",
     "baseUrl": "./",
     "paths": {
+      "#/*": [
+        "./*"
+      ],
       "@/*": [
         "src/*"
       ]
@@ -55,6 +58,7 @@
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "prisma*/**/*.ts"
   ]
 }

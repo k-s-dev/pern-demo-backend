@@ -14,7 +14,7 @@ export const app = express();
 app.use(pinoHttp({ logger }));
 
 // has to be before parser middleware (express.json)
-app.all('/api/auth/{*any}', toNodeHandler(nextDemoApiAuth));
+app.all('/api/next-demo/auth/{*any}', toNodeHandler(nextDemoApiAuth));
 
 app.use(cors());
 app.use(helmet());

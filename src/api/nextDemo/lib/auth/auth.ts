@@ -1,12 +1,13 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { nextDemoApiConfig } from "../config.js";
 import { hashPassword, verifyPassword } from "./password.js";
 import { prisma } from "../db/service.js";
+import { config } from "@/lib/config.js";
 
 export const nextDemoApiAuth = betterAuth({
-  secret: nextDemoApiConfig.auth.secret,
-  baseURL: nextDemoApiConfig.auth.url,
+  secret: config.nextDemo.auth.secret,
+  baseURL: config.nextDemo.auth.url,
+  basePath: "/api/next-demo/auth",
   // REVIEW
   trustedOrigins: ["*"],
   advanced: {
@@ -24,12 +25,12 @@ export const nextDemoApiAuth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: nextDemoApiConfig.auth.socialProviders.google.id,
-      clientSecret: nextDemoApiConfig.auth.socialProviders.google.secret,
+      clientId: config.nextDemo.auth.socialProviders.google.id,
+      clientSecret: config.nextDemo.auth.socialProviders.google.secret,
     },
     github: {
-      clientId: nextDemoApiConfig.auth.socialProviders.github.id,
-      clientSecret: nextDemoApiConfig.auth.socialProviders.github.secret,
+      clientId: config.nextDemo.auth.socialProviders.github.id,
+      clientSecret: config.nextDemo.auth.socialProviders.github.secret,
     },
   },
   emailAndPassword: {

@@ -1,8 +1,8 @@
+import { config } from "@/lib/config.js";
 import { hash, type Options, verify } from "@node-rs/argon2";
-import { nextDemoApiConfig } from "../config.js";
 
 const opts: Options = {
-  memoryCost: nextDemoApiConfig.auth.passwordHashCost,
+  memoryCost: config.nodeEnv === "production" ? 100_000 : 4096,
   timeCost: 3, // 3 iterations
   parallelism: 4, // 4 lanes
   outputLen: 32, // 32 bytes
