@@ -5,7 +5,7 @@ export const nextDemoApiRouter = Router();
 
 // check app route
 nextDemoApiRouter.get("/", (_req, res) => {
-  res.json("Welcome to express app:api:nextDemo.");
+  res.json("Welcome to express app:nextDemo:api.");
 });
 
 // check error handler route

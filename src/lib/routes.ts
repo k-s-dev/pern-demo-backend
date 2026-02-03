@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ApiValidationError } from "./error/definitions.js";
-import { apiRouter } from "@/api/lib/routes.js";
+import { nextDemoRouter } from "../modules/nextDemo/lib/routes.js";
 
 export const appRouter = Router();
 
@@ -15,4 +15,4 @@ appRouter.get("/error", () => {
 });
 
 // check api route
-appRouter.use("/api", apiRouter);
+appRouter.use("/next-demo", nextDemoRouter);

@@ -4,9 +4,9 @@ import helmet from "helmet";
 import { pinoHttp } from "pino-http";
 import { toNodeHandler } from "better-auth/node";
 import { logger } from "./lib/logger/service.js";
-import { nextDemoApiAuth } from "./api/nextDemo/lib/auth/auth.js";
 import { appRouter } from "./lib/routes.js";
 import { errorHandler } from "./lib/error/errorHandler.js";
+import { nextDemoAuth } from "./modules/nextDemo/lib/auth/auth.js";
 
 export const app = express();
 
@@ -14,7 +14,7 @@ export const app = express();
 app.use(pinoHttp({ logger }));
 
 // has to be before parser middleware (express.json)
-app.all('/api/next-demo/auth/{*any}', toNodeHandler(nextDemoApiAuth));
+app.all("/next-demo/api/auth/{*any}", toNodeHandler(nextDemoAuth));
 
 app.use(cors());
 app.use(helmet());

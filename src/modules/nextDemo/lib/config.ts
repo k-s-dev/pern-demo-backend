@@ -19,7 +19,7 @@ if (isNaN(Number(process.env.NEXT_DEMO_AUTH_HASH_COST))) {
   throw new Error();
 }
 
-export const nextDemoApiConfig = {
+export const nextDemoConfig = {
   db: {
     url: process.env.NEXT_DEMO_DATABASE_URL as string,
   },

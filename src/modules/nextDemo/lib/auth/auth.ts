@@ -4,10 +4,10 @@ import { hashPassword, verifyPassword } from "./password.js";
 import { prisma } from "../db/service.js";
 import { config } from "@/lib/config.js";
 
-export const nextDemoApiAuth = betterAuth({
+export const nextDemoAuth = betterAuth({
   secret: config.nextDemo.auth.secret,
   baseURL: config.nextDemo.auth.url,
-  basePath: "/api/next-demo/auth",
+  basePath: "/next-demo/api/auth",
   // REVIEW
   trustedOrigins: ["*"],
   advanced: {

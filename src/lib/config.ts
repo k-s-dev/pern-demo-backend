@@ -1,6 +1,6 @@
 import dotenvx from "@dotenvx/dotenvx";
 import { APP_REQUIRED_ENV_VARIABLES } from "./constants.js";
-import { nextDemoApiConfig } from "@/api/nextDemo/lib/config.js";
+import { nextDemoConfig } from "../modules/nextDemo/lib/config.js";
 
 /**
  * load environment
@@ -19,5 +19,5 @@ APP_REQUIRED_ENV_VARIABLES.forEach((variable) => {
 
 export const config = {
   nodeEnv: process.env.NODE_ENV || "development",
-  nextDemo: nextDemoApiConfig,
+  nextDemo: nextDemoConfig,
 };
