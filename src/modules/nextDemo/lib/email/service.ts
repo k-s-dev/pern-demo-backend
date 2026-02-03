@@ -1,15 +1,16 @@
-// TODO: implement email service
 import * as nodemailer from "nodemailer";
-
-const nodeEnv = process.env.NODE_ENV;
-const emailId = process.env.EMAIL_ID;
-const password = process.env.EMAIL_PASSWORD;
+import { nextDemoConfig } from "../config.js";
+import { appConfig } from "#/src/lib/config.js";
+import { logger } from "#/src/lib/logger/service.js";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: emailId,
-    pass: password,
+    type: "OAUTH2",
+    user: nextDemoConfig.email.id,
+    clientId: nextDemoConfig.email.clientId,
+    clientSecret: nextDemoConfig.email.secret,
+    refreshToken: nextDemoConfig.email.refreshToken,
   },
 });
 
@@ -21,12 +22,13 @@ export async function sendMail(dataIn: {
   subject?: string;
 }) {
   if (!dataIn.from) {
-    dataIn.from = '"Shoonya Dev" <shunya.acad@gmail.com>';
+    dataIn.from = nextDemoConfig.email.from;
   }
 
-  if (nodeEnv === "production") {
+  if (appConfig.nodeEnv === "production") {
     await transporter.sendMail(dataIn);
   } else {
-    console.log(`send email: ${dataIn.to}, ${dataIn.subject}`);
+    logger.info(`send email: ${dataIn.to}, ${dataIn.subject}`);
+    logger.info(dataIn.html);
   }
 }

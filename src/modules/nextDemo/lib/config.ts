@@ -1,6 +1,4 @@
-import {
-  NEXT_DEMO_REQUIRED_ENV_VARIABLES,
-} from "./constants.js";
+import { NEXT_DEMO_REQUIRED_ENV_VARIABLES } from "./constants.js";
 import dotenvx from "@dotenvx/dotenvx";
 
 dotenvx.config({ convention: "nextjs" });
@@ -33,6 +31,9 @@ export const nextDemoConfig = {
   },
   email: {
     id: process.env.NEXT_DEMO_EMAIL_ID as string,
-    password: process.env.NEXT_DEMO_EMAIL_PASSWORD as string,
-  }
+    clientId: process.env.NEXT_DEMO_EMAIL_CLIENT_ID as string,
+    secret: process.env.NEXT_DEMO_EMAIL_SECRET as string,
+    refreshToken: process.env.NEXT_DEMO_EMAIL_REFRESH_TOKEN as string,
+    from: '"Nextjs Express Demo" <k.s.dev.deployments@gmail.com>',
+  },
 };
