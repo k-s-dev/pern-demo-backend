@@ -51,9 +51,9 @@
         "src/*"
       ]
     },
-    // vitest
     "types": [
       "node",
+      "./src/lib/types/index.d.ts",
       "vitest/globals"
     ]
   },
