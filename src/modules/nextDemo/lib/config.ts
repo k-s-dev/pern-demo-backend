@@ -14,11 +14,6 @@ NEXT_DEMO_REQUIRED_ENV_VARIABLES.forEach((variable) => {
   }
 });
 
-if (isNaN(Number(process.env.NEXT_DEMO_AUTH_HASH_COST))) {
-  console.log("Environment variable missing: NEXT_DEMO_AUTH_HASH_COST");
-  throw new Error();
-}
-
 export const nextDemoConfig = {
   db: {
     url: process.env.NEXT_DEMO_DATABASE_URL as string,
@@ -26,9 +21,6 @@ export const nextDemoConfig = {
   auth: {
     secret: process.env.NEXT_DEMO_AUTH_SECRET as string,
     url: process.env.NEXT_DEMO_AUTH_URL as string,
-    passwordHashCost:
-      Number(process.env.NEXT_DEMO_AUTH_HASH_COST) ||
-      DEFAULT_PASSWORD_HASH_COST,
     socialProviders: {
       google: {
         id: process.env.NEXT_DEMO_AUTH_GOOGLE_ID as string,
