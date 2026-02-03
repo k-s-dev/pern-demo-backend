@@ -1,12 +1,13 @@
 // src/lib/index.d.ts
 
-import type { Session, User } from "better-auth";
+import type { TSessionUser } from "#/src/modules/nextDemo/lib/auth/definitions.ts";
+import type { Session } from "better-auth";
 
 declare global {
   namespace Express {
     interface Locals {
       session?: Session;
-      user?: User;
+      user?: TSessionUser;
     }
   }
 }

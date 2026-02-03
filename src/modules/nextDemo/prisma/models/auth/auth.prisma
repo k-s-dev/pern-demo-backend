@@ -1,3 +1,8 @@
+enum USER_ROLE {
+  ADMIN
+  USER
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String
@@ -8,6 +13,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  role          USER_ROLE @default(USER)
 
   @@unique([email])
   @@map("user")
