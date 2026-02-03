@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { config } from "@/lib/config.js";
-import { PrismaClient } from "#/prisma-next-demo/generated/client.js";
+import { PrismaClient } from "../../prisma/generated/client.js";
 
 const adapter = new PrismaPg({ connectionString: config.nextDemo.db.url });
 
