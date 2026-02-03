@@ -16,7 +16,14 @@ app.use(pinoHttp({ logger }));
 // has to be before parser middleware (express.json)
 app.all("/next-demo/api/auth/{*any}", toNodeHandler(nextDemoAuth));
 
-app.use(cors());
+app.use(
+  cors({
+    // REVIEW
+    origin: "*",
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    credentials: true,
+  }),
+);
 app.use(helmet());
 app.use(express.json());
 
