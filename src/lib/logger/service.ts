@@ -1,5 +1,5 @@
 import pino from "pino";
-import { config } from "../config.js";
+import { appConfig } from "../config.js";
 
 const rootDir = process.cwd();
 
@@ -11,8 +11,8 @@ const transport = pino.transport({
       options: { destination: `${rootDir}/server.log` },
     },
     {
-      target: config.nodeEnv === "development" ? "pino-pretty" : "pino/file",
-      level: config.nodeEnv === "development" ? "debug" : "error",
+      target: appConfig.nodeEnv === "development" ? "pino-pretty" : "pino/file",
+      level: appConfig.nodeEnv === "development" ? "debug" : "error",
       options: {
         destination: 1,
         colorize: true,

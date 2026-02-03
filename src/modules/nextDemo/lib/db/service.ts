@@ -1,8 +1,9 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { config } from "@/lib/config.js";
+import { appConfig } from "@/lib/config.js";
 import { PrismaClient } from "../../prisma/generated/client.js";
+import { nextDemoConfig } from "../config.js";
 
-const adapter = new PrismaPg({ connectionString: config.nextDemo.db.url });
+const adapter = new PrismaPg({ connectionString: nextDemoConfig.db.url });
 
 // Extend the global object type to include prisma
 const globalForNextDemoApiPrisma = globalThis as unknown as {
@@ -14,6 +15,6 @@ export const prisma =
   globalForNextDemoApiPrisma.prisma || new PrismaClient({ adapter });
 
 // In development, attach the instance to the global object
-if (config.nodeEnv !== "production") {
+if (appConfig.nodeEnv !== "production") {
   globalForNextDemoApiPrisma.prisma = prisma;
 }

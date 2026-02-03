@@ -1,5 +1,4 @@
 import {
-  DEFAULT_PASSWORD_HASH_COST,
   NEXT_DEMO_REQUIRED_ENV_VARIABLES,
 } from "./constants.js";
 import dotenvx from "@dotenvx/dotenvx";
@@ -32,4 +31,8 @@ export const nextDemoConfig = {
       },
     },
   },
+  email: {
+    id: process.env.NEXT_DEMO_EMAIL_ID as string,
+    password: process.env.NEXT_DEMO_EMAIL_PASSWORD as string,
+  }
 };

@@ -1,8 +1,8 @@
-import { config } from "@/lib/config.js";
+import { appConfig } from "@/lib/config.js";
 import { hash, type Options, verify } from "@node-rs/argon2";
 
 const opts: Options = {
-  memoryCost: config.nodeEnv === "production" ? 100_000 : 4096,
+  memoryCost: appConfig.nodeEnv === "production" ? 100_000 : 4096,
   timeCost: 3, // 3 iterations
   parallelism: 4, // 4 lanes
   outputLen: 32, // 32 bytes
