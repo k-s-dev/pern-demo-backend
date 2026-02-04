@@ -1,1 +1,3 @@
-export const APP_REQUIRED_ENV_VARIABLES = [];
+export const APP_REQUIRED_ENV_VARIABLES = [
+  "PORT",
+];

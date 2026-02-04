@@ -16,6 +16,13 @@ APP_REQUIRED_ENV_VARIABLES.forEach((variable) => {
   }
 });
 
+const port = process.env.PORT;
+if (!!port && isNaN(Number(port))) {
+  console.log("Environment error: port has to be a number");
+  throw new Error();
+}
+
 export const appConfig = {
   nodeEnv: process.env.NODE_ENV || "development",
+  port: Number(port) || 5000,
 };

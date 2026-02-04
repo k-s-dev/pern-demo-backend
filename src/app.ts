@@ -7,6 +7,7 @@ import { logger } from "./lib/logger/service.js";
 import { appRouter } from "./lib/routes.js";
 import { errorHandler } from "./lib/error/errorHandler.js";
 import { nextDemoAuth } from "./modules/nextDemo/lib/auth/auth.js";
+import { appConfig } from "./lib/config.js";
 
 export const app = express();
 
@@ -34,7 +35,7 @@ app.use(appRouter);
 // needs to be the last middleware
 app.use(errorHandler);
 
-const server = app.listen(3000, "0.0.0.0", () => {
+const server = app.listen(appConfig.port, "0.0.0.0", () => {
   const addressInfo = server.address();
   logger.info(`Server is running on ${JSON.stringify(addressInfo)}`);
 });
