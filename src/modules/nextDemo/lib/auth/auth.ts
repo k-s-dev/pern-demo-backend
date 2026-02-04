@@ -4,6 +4,8 @@ import { hashPassword, verifyPassword } from "./password.js";
 import { prisma } from "../db/service.js";
 import { nextDemoConfig } from "../config.js";
 import { USER_ROLE } from "../../prisma/generated/enums.js";
+import { sendVerificationEmail } from "./verification.email.service.js";
+import { logger } from "#/src/lib/logger/service.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -17,13 +19,6 @@ export const nextDemoAuth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
-  emailVerification: {
-    sendOnSignUp: true,
-    sendOnSignIn: true,
-    // sendVerificationEmail: async ({ user, url, token }, request) => {
-    // await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
-    // },
-  },
   socialProviders: {
     google: {
       clientId: nextDemoConfig.auth.socialProviders.google.id,
@@ -39,11 +34,18 @@ export const nextDemoAuth = betterAuth({
   emailAndPassword: {
     enabled: true,
     password: { hash: hashPassword, verify: verifyPassword },
-    // TODO: add email verification
-    // requireEmailVerification: true,
-    // sendResetPassword: async ({ user, url, token }, request) => {
-    //   await sendVerificationEmail(user.email, url, "RESET_PASSWORD");
-    // },
+    sendResetPassword: async ({ user, url }) => {
+      await sendVerificationEmail(user.email, url, "RESET_PASSWORD");
+      logger.info(`Reset password url for ${user}: ${url}`)
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
+      logger.info(`Email verification url for ${user}: ${url}`)
+    },
   },
   user: {
     additionalFields: {

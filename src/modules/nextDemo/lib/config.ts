@@ -12,6 +12,7 @@ NEXT_DEMO_REQUIRED_ENV_VARIABLES.forEach((variable) => {
 });
 
 export const nextDemoConfig = {
+  name: process.env.NEXT_DEMO_APP_NAME as string,
   db: {
     url: process.env.NEXT_DEMO_DATABASE_URL as string,
   },
@@ -31,9 +32,6 @@ export const nextDemoConfig = {
   },
   email: {
     id: process.env.NEXT_DEMO_EMAIL_ID as string,
-    clientId: process.env.NEXT_DEMO_EMAIL_CLIENT_ID as string,
-    secret: process.env.NEXT_DEMO_EMAIL_SECRET as string,
-    refreshToken: process.env.NEXT_DEMO_EMAIL_REFRESH_TOKEN as string,
-    from: '"Nextjs Express Demo" <k.s.dev.deployments@gmail.com>',
+    password: process.env.NEXT_DEMO_EMAIL_PASSWORD as string,
   },
 };

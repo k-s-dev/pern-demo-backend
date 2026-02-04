@@ -6,11 +6,8 @@ import { logger } from "#/src/lib/logger/service.js";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    type: "OAUTH2",
     user: nextDemoConfig.email.id,
-    clientId: nextDemoConfig.email.clientId,
-    clientSecret: nextDemoConfig.email.secret,
-    refreshToken: nextDemoConfig.email.refreshToken,
+    pass: nextDemoConfig.email.password,
   },
 });
 
@@ -22,13 +19,13 @@ export async function sendMail(dataIn: {
   subject?: string;
 }) {
   if (!dataIn.from) {
-    dataIn.from = nextDemoConfig.email.from;
+    dataIn.from = `${nextDemoConfig.name} <${nextDemoConfig.email.id}>`;
   }
 
   if (appConfig.nodeEnv === "production") {
     await transporter.sendMail(dataIn);
   } else {
-    logger.info(`send email: ${dataIn.to}, ${dataIn.subject}`);
     logger.info(dataIn.html);
+    logger.info(`send email: ${dataIn.to}, ${dataIn.subject}`);
   }
 }
