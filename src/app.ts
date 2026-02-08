@@ -13,7 +13,6 @@ export const app = express();
 
 // middleware
 app.use(pinoHttp({ logger }));
-app.use(helmet());
 
 app.use(
   cors({
@@ -24,9 +23,13 @@ app.use(
   }),
 );
 
-// has to be after cors middleware and before parser middleware (express.json)
+/**
+ * better-auth middleware has to be after cors middleware
+ * and before helmet, parser middleware[s] (express.json)
+ */
 app.all("/next-demo/api/auth/{*any}", toNodeHandler(nextDemoAuth));
 
+app.use(helmet());
 app.use(express.json());
 
 // -- routes

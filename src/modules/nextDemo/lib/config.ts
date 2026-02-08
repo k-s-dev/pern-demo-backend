@@ -11,7 +11,10 @@ NEXT_DEMO_REQUIRED_ENV_VARIABLES.forEach((variable) => {
   }
 });
 
-const trustedOrigins = process.env.NEXT_DEMO_AUTH_TRUSTED_ORIGINS?.split(",");
+const trustedOrigins = process.env.NEXT_DEMO_AUTH_TRUSTED_ORIGINS?.replace(
+  /,\s*$/,
+  "",
+).split(",");
 
 export const nextDemoConfig = {
   name: process.env.NEXT_DEMO_APP_NAME as string,

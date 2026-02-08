@@ -6,6 +6,7 @@ import { nextDemoConfig } from "../config.js";
 import { USER_ROLE } from "../../prisma/generated/enums.js";
 import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
+import { openAPI } from "better-auth/plugins";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -13,6 +14,9 @@ export const nextDemoAuth = betterAuth({
   basePath: nextDemoConfig.auth.basePath,
   // REVIEW
   trustedOrigins: nextDemoConfig.auth.trustedOrigins,
+  advanced: {
+    useSecureCookies: false,
+  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -54,4 +58,5 @@ export const nextDemoAuth = betterAuth({
       },
     },
   },
+  plugins: [openAPI()],
 });
