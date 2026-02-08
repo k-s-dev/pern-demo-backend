@@ -11,6 +11,8 @@ NEXT_DEMO_REQUIRED_ENV_VARIABLES.forEach((variable) => {
   }
 });
 
+const trustedOrigins = process.env.NEXT_DEMO_AUTH_TRUSTED_ORIGINS?.split(",");
+
 export const nextDemoConfig = {
   name: process.env.NEXT_DEMO_APP_NAME as string,
   db: {
@@ -18,7 +20,9 @@ export const nextDemoConfig = {
   },
   auth: {
     secret: process.env.NEXT_DEMO_AUTH_SECRET as string,
-    url: process.env.NEXT_DEMO_AUTH_URL as string,
+    baseUrl: process.env.NEXT_DEMO_AUTH_BASE_URL as string,
+    basePath: process.env.NEXT_DEMO_AUTH_BASE_PATH as string,
+    trustedOrigins: trustedOrigins,
     socialProviders: {
       google: {
         id: process.env.NEXT_DEMO_AUTH_GOOGLE_ID as string,
