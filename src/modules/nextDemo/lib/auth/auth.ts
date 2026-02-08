@@ -6,15 +6,25 @@ import { nextDemoConfig } from "../config.js";
 import { USER_ROLE } from "../../prisma/generated/enums.js";
 import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
+import { appConfig } from "#/src/lib/config.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
   baseURL: nextDemoConfig.auth.url,
   basePath: "/next-demo/api/auth",
   // REVIEW
-  trustedOrigins: ["*"],
+  trustedOrigins: ["http://192.168.1.5:3000"],
   advanced: {
-    disableOriginCheck: true,
+    // disableOriginCheck: true,
+    // useSecureCookies: appConfig.nodeEnv === "production" ? true : false,
+    // crossSubDomainCookies: {
+    //   enabled: true,
+    //   domain: "192.168.1.5",
+    // },
+    // defaultCookieAttributes: {
+    //   httpOnly: true,
+    //   secure: false,
+    // },
   },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -36,7 +46,7 @@ export const nextDemoAuth = betterAuth({
     password: { hash: hashPassword, verify: verifyPassword },
     sendResetPassword: async ({ user, url }) => {
       await sendVerificationEmail(user.email, url, "RESET_PASSWORD");
-      logger.info(`Reset password url for ${user}: ${url}`)
+      logger.info(`Reset password url for ${user}: ${url}`);
     },
   },
   emailVerification: {
@@ -44,7 +54,7 @@ export const nextDemoAuth = betterAuth({
     sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {
       await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
-      logger.info(`Email verification url for ${user}: ${url}`)
+      logger.info(`Email verification url for ${user}: ${url}`);
     },
   },
   user: {
