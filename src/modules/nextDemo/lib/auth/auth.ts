@@ -3,10 +3,10 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { hashPassword, verifyPassword } from "./password.js";
 import { prisma } from "../db/service.js";
 import { nextDemoConfig } from "../config.js";
-import { USER_ROLE } from "../../prisma/generated/enums.js";
 import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
 import { openAPI } from "better-auth/plugins";
+import { USER_ROLE } from "../definitions/prisma/enums.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,

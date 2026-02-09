@@ -1,6 +1,6 @@
 import { nextDemoConfig } from "../config.js";
+import type { TOKEN_TYPE } from "../definitions/auth/generic.js";
 import { sendMail } from "../email/service.js";
-import type { TOKEN_TYPE } from "./definitions.js";
 
 export async function sendVerificationEmail(
   email: string,

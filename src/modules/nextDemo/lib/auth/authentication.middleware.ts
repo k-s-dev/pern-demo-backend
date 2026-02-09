@@ -2,7 +2,7 @@ import { fromNodeHeaders } from "better-auth/node";
 import { nextDemoAuth } from "./auth.js";
 import { ApiAuthenticationError } from "#/src/lib/error/definitions.js";
 import type { NextFunction, Request, Response } from "express";
-import type { TSessionUser } from "./definitions.js";
+import type { TSessionUser } from "../definitions/auth/generic.js";
 
 export async function isAuthenticated(
   req: Request,

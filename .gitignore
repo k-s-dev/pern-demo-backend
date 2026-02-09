@@ -1,5 +1,8 @@
 # custom
 
+## adhoc rough scripts
+.rough/
+
 ## prisma
 **/generated/
 *.env*
