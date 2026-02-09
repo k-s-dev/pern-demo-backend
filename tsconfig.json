@@ -44,21 +44,10 @@
     "moduleResolution": "nodenext",
     "baseUrl": "./",
     "paths": {
-      "#/*": [
-        "./*"
-      ],
-      "@/*": [
-        "src/*"
-      ]
+      "#/*": ["./*"],
+      "@/*": ["src/*"]
     },
-    "types": [
-      "node",
-      "./src/lib/types/index.d.ts",
-      "vitest/globals"
-    ]
+    "types": ["node", "./src/lib/types/index.d.ts", "vitest/globals"]
   },
-  "include": [
-    "src/**/*.ts",
-    "prisma*/**/*"
-  ]
+  "include": ["src/**/*.ts", "prisma*/**/*"]
 }
