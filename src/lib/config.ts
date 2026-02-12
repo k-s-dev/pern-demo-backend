@@ -22,10 +22,9 @@ if (!!port && isNaN(Number(port))) {
   throw new Error();
 }
 
-const trustedOrigins = process.env.TRUSTED_ORIGINS?.replace(
-  /,\s*$/,
-  "",
-).split(",");
+const trustedOrigins = process.env.TRUSTED_ORIGINS?.replace(/,\s*$/, "").split(
+  ",",
+);
 
 export const appConfig = {
   nodeEnv: process.env.NODE_ENV || "development",
