@@ -17,7 +17,7 @@ app.use(pinoHttp({ logger }));
 app.use(
   cors({
     // REVIEW
-    origin: "http://192.168.1.5:3000",
+    origin: appConfig.trustedOrigins,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   }),
