@@ -7,7 +7,6 @@ import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
 import { openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
-import { appConfig } from "#/src/lib/config.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -26,11 +25,6 @@ export const nextDemoAuth = betterAuth({
       clientId: nextDemoConfig.auth.socialProviders.google.id,
       clientSecret: nextDemoConfig.auth.socialProviders.google.secret,
       mapProfileToUser: (profile) => ({ name: profile.name }),
-      // REVIEW: check if this hack works in production
-      redirectURI:
-        appConfig.nodeEnv === "development"
-          ? "http://192.168.1.5.xip.io:5000/next-demo/api/auth/callback/google"
-          : nextDemoConfig.auth.baseUrl + "/callback/google",
     },
     github: {
       clientId: nextDemoConfig.auth.socialProviders.github.id,
