@@ -45,7 +45,7 @@ export const nextDemoAuth = betterAuth({
     sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {
       await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
-      logger.info(`Email verification url for ${user}: ${url}`);
+      logger.info(`Email verification url for ${user.email}: ${url}`);
     },
   },
   user: {

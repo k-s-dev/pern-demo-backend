@@ -10,8 +10,11 @@ export const SDbId = v.pipe(v.string(), v.uuid());
 
 export const SName = v.pipe(
   v.string(),
-  v.minLength(3),
-  v.maxLength(STRING_LENGTH_SM),
+  v.minLength(3, "Name must be at least 3 characters long."),
+  v.maxLength(
+    STRING_LENGTH_SM,
+    `Name must be less than ${STRING_LENGTH_SM} characters long.`,
+  ),
 );
 
 export const SEmail = v.pipe(
