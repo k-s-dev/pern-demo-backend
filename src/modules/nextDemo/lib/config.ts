@@ -1,3 +1,4 @@
+import { cleanSlashes, extractArrayfromString } from "#/src/lib/utils/index.js";
 import { NEXT_DEMO_REQUIRED_ENV_VARIABLES } from "./constants.js";
 import dotenvx from "@dotenvx/dotenvx";
 
@@ -11,13 +12,21 @@ NEXT_DEMO_REQUIRED_ENV_VARIABLES.forEach((variable) => {
   }
 });
 
-const trustedOrigins = process.env.NEXT_DEMO_AUTH_TRUSTED_ORIGINS?.replace(
-  /,\s*$/,
-  "",
-).split(",");
+const trustedOrigins = extractArrayfromString(
+  process.env.NEXT_DEMO_AUTH_TRUSTED_ORIGINS as string,
+);
+
+const verifyEmailPath = cleanSlashes(
+  process.env.NEXT_DEMO_AUTH_FRONTEND_VERIFY_EMAIL_PATH as string,
+);
+
+const resetPasswordPath = cleanSlashes(
+  process.env.NEXT_DEMO_AUTH_FRONTEND_RESET_PASSWORD_PATH as string,
+);
 
 export const nextDemoConfig = {
   name: process.env.NEXT_DEMO_APP_NAME as string,
+  frontendUrl: process.env.NEXT_DEMO_FRONTEND_URL as string,
   db: {
     url: process.env.NEXT_DEMO_DATABASE_URL as string,
   },
@@ -35,6 +44,10 @@ export const nextDemoConfig = {
         id: process.env.NEXT_DEMO_AUTH_GITHUB_ID as string,
         secret: process.env.NEXT_DEMO_AUTH_GITHUB_SECRET as string,
       },
+    },
+    frontend: {
+      verifyEmailPath,
+      resetPasswordPath,
     },
   },
   email: {

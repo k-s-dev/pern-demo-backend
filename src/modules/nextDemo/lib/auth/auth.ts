@@ -34,18 +34,29 @@ export const nextDemoAuth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
     password: { hash: hashPassword, verify: verifyPassword },
-    sendResetPassword: async ({ user, url }) => {
+    sendResetPassword: async ({ user, token }) => {
+      const frontendUrl = nextDemoConfig.frontendUrl;
+      const resetPasswordPath = nextDemoConfig.auth.frontend.resetPasswordPath;
+      const url = `${frontendUrl}/${resetPasswordPath}/?token=${token}`;
       await sendVerificationEmail(user.email, url, "RESET_PASSWORD");
-      logger.info(`Reset password url for ${user}: ${url}`);
+      logger.info(`Reset password url for ${user.name}: ${url}`);
     },
   },
   emailVerification: {
     sendOnSignUp: true,
-    sendOnSignIn: true,
-    sendVerificationEmail: async ({ user, url }) => {
-      await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
-      logger.info(`Email verification url for ${user.email}: ${url}`);
+    autoSignInAfterVerification: false,
+    sendVerificationEmail: async ({ user, token }) => {
+      if (!user.emailVerified) {
+        const frontendUrl = nextDemoConfig.frontendUrl;
+        const verifyEmailPath = nextDemoConfig.auth.frontend.verifyEmailPath;
+        const url = `${frontendUrl}/${verifyEmailPath}/?token=${token}`;
+        await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
+        logger.info(`Email verification url for ${user.email}: ${url}`);
+      } else {
+        logger.info(`${user.email} already verified.`);
+      }
     },
   },
   user: {
