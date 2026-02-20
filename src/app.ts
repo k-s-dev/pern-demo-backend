@@ -9,7 +9,7 @@ import { errorHandler } from "./lib/error/errorHandler.js";
 import { nextDemoAuth } from "./modules/nextDemo/lib/auth/auth.js";
 import { appConfig } from "./lib/config.js";
 
-export const app = express();
+const app = express();
 
 // middleware
 app.use(pinoHttp({ logger }));
@@ -39,7 +39,16 @@ app.use(appRouter);
 // needs to be the last middleware
 app.use(errorHandler);
 
-const server = app.listen(appConfig.port, "0.0.0.0", () => {
-  const addressInfo = server.address();
-  logger.info(`Server is running on ${JSON.stringify(addressInfo)}`);
-});
+if (appConfig.nodeEnv === "development") {
+  const server = app.listen(appConfig.port, "0.0.0.0", () => {
+    const addressInfo = server.address();
+    logger.info(`Server is running on ${JSON.stringify(addressInfo)}`);
+  });
+} else {
+  const server = app.listen(appConfig.port, () => {
+    const addressInfo = server.address();
+    logger.info(`Server is running on ${JSON.stringify(addressInfo)}`);
+  });
+}
+
+export default app;

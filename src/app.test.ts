@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "./app.js";
+import app from "./app.js";
 
 describe("Test app is running", () => {
   test("It should response success for GET /", async () => {
