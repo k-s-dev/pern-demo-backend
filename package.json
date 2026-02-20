@@ -14,7 +14,7 @@
     "env:prod": "npx cross-env NODE_ENV=production",
     "env:dev": "npx cross-env NODE_ENV=development",
     "env:test": "npx cross-env NODE_ENV=test",
-    "build": "npm run env:prod -- rm -rf ./dist && npx tsc --project tsconfig.build.json && npx tsc-alias",
+    "build": "rm -rf ./dist && npm run env:prod -- npx tsc --project tsconfig.build.json && npm run env:prod -- npx tsc-alias",
     "start": "npm run env:prod -- node dist/src/app.js",
     "prod:db:nextDemoApi:deploy": "npm run env:prod -- npx prisma migrate deploy --schema ./src/modules/nextDemo/prisma --config ./src/modules/nextDemo/prisma/prisma.config.ts",
     "prod:db:nextDemoApi:generate": "npm run env:prod -- npx prisma generate --schema ./src/modules/nextDemo/prisma --config ./src/modules/nextDemo/prisma/prisma.config.ts",
