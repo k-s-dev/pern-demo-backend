@@ -1,71 +1,88 @@
-# Express Typescript Starter
+# PERN demo
 
-## Setup from scratch
+> **Postgresql** **Expressjs** **React** **Nodejs**
+>
+> A sample PERN stack project setup built with Nextjs app router and Typescript,
+> deployed on Vercel
+>
+> This is an extension of [Nextjs demo monorepo](https://github.com/k-s-dev/nextjs-demo).
 
-### Init from nodejs-typescript template
+- _Frontend_: **Next**/**React**
+  - [repo](https://github.com/k-s-dev/pern-demo-frontend)
+  - deployment
+    - [production](): main branch
+    - [preview](): dev branch
+- _Backend_: **Nodejs**/**Expressjs**
+  - [repo](https://github.com/k-s-dev/pern-demo-backend)
+  - deployment
+    - [production](): main branch
+    - [preview](): dev branch
+  - _db_: `postgresql`
+    - _production_: hosted on **Neon**
+    - _development & test_: local
+    - _orm_: **Prisma**
 
-```bash
-project_path=<...>
-repo='git@github.com:k-s-dev/starter-templates.git'
-git clone --branch=nodejs-ts ${repo} ${project_path}
-cd "${project_path}"
-git branch --unset-upstream
-git branch --move main
-npm install
-```
+## Features
 
-### Installations
+- Typescript and validation checks on backend and frontend
+  - Frontend extends types and schemas from backend
+- Auth: implemented using `better-auth`
+  - sign in: email/password, OAuth
+  - verification emails
+  - sessions: token cookie based, verified on backend
+  - authorization (permissions): custom role based checks
+- Frontend
+  - Forms: validation both on client and server
 
-- `express`
-  - middleware
-    - `cors`
-    - `helmet`: http headers settings
-    - logger: `pino`
-  - data
-    - validation: `valibot`
-    - orm: `prisma`
+## Workflow
 
-#### Express
+### Pre build check list
 
-```bash
-npm install \
-  express \
-  cors \
-  helmet
+#### Backend
 
-npm install --save-dev \
-  @types/express \
-  @types/cors \
-  @types/helmet
-```
+- check env variables
+  - `env_samples/` folder is available in git repo
+  - if needed, create env samples: `npm run env:create:samples`
 
-Setup express app with minimal middleware, routes and error-handler.
+- setup db
+  - npm scripts for prisma cli commands are available
 
-#### Logger
+- `npm run check`
+  - runs all checks sequentially and stops at first error
+    - `npm run check:format && npm run check:lint && npm run check:types`
+  - rerun after resolving until all checks pass
+  - format errors can be fixed by **prettier**
+    - `npm run fix:format`
+  - lint and typescript errors are better fixed manually
 
-```bash
-npm install pino-http pino-pretty
-```
+- run tests: **vitest**
+  - `npm run test`
 
-Setup logger service ([pino](https://getpino.io/#/docs/web?id=pino-with-express)).
+#### Frontend
 
-#### Data
+- backend dependencies
+  - sync types and validation schemas with backend
+    - `npm run update:definitions`
+  - check backend server is running
 
-- install `prisma` and `valibot`
+- check env variables
+  - `env_samples/` folder is available in git repo
+  - if needed, create env samples: `npm run env:create:samples`
 
-```bash
-npm install @prisma/client @prisma/adapter-pg pg valibot
-npm install prisma @types/node @types/pg --save-dev
-```
+- `npm run check`
+  - runs all checks sequentially and stops at first error
+    - `npm run check:format && npm run check:lint && npm run check:types`
+  - rerun after resolving until all checks pass
+  - format errors can be fixed by **prettier**
+    - `npm run fix:format`
+  - lint and typescript errors are better fixed manually
 
-- initialize `prisma` configuration
-
-```bash
-npx prisma init --datasource-provider postgresql \
-  --output ./src/prisma/generated
-```
-
-- adjust `src/common/config.ts` for db url
-- adjust `prisma.config.ts`
-  - e.g. adjust paths to keep all prisma related files in `/src/prisma`
-- adjust `package.json` scripts for db/orm/prisma ops
+- run tests
+  - start backend server with configured environment for db
+    - default: separate db for test environment
+    - make sure `env.test` points to the right backend instance
+  - component tests: **jest**
+    - `npm run test:jest`
+  - e2e tests: **cypress**
+    - `npm run test`: build and start the server using test env
+    - `npm run test:cypress:run` or `npm run test:cypress:open`
