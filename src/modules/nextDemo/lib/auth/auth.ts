@@ -15,7 +15,7 @@ export const nextDemoAuth = betterAuth({
   // REVIEW
   trustedOrigins: nextDemoConfig.auth.trustedOrigins,
   advanced: {
-    useSecureCookies: false,
+    useSecureCookies: true,
   },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
