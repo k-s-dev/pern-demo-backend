@@ -1,8 +1,8 @@
-import * as fs from 'node:fs'
-import * as path from 'path'
+import * as fs from "node:fs";
+import * as path from "path";
 
 const DST_DIR = "env_samples";
-const GLOB_PATTERN=".env*"
+const GLOB_PATTERN = ".env*";
 
 main();
 
@@ -49,7 +49,7 @@ function refactorDstFiles(dstFiles) {
     });
     newContent = newContent.join("\n");
     fs.writeFileSync(f, newContent, {
-      flag: "w+"
+      flag: "w+",
     });
   });
 }
