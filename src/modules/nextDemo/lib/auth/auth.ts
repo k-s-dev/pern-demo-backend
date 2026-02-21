@@ -8,7 +8,6 @@ import { logger } from "#/src/lib/logger/service.js";
 import { openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
 import { appConfig } from "#/src/lib/config.js";
-import { nextCookies } from "better-auth/next-js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -24,6 +23,7 @@ export const nextDemoAuth = betterAuth({
     },
     defaultCookieAttributes: {
       partitioned: false,
+      sameSite: "None",
     },
   },
   database: prismaAdapter(prisma, {
@@ -78,9 +78,5 @@ export const nextDemoAuth = betterAuth({
       },
     },
   },
-  plugins: [
-    openAPI(),
-    // nextCookies should be last
-    nextCookies(),
-  ],
+  plugins: [openAPI()],
 });
