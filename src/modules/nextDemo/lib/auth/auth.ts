@@ -21,6 +21,9 @@ export const nextDemoAuth = betterAuth({
       enabled: appConfig.nodeEnv === "production",
       domain: appConfig.host,
     },
+    defaultCookieAttributes: {
+      sameSite: appConfig.nodeEnv === "production" ? "None" : "Lax",
+    },
   },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
