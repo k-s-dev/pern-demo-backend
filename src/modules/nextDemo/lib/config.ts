@@ -26,7 +26,6 @@ const resetPasswordPath = cleanSlashes(
 
 export const nextDemoConfig = {
   name: process.env.NEXT_DEMO_APP_NAME as string,
-  frontendUrl: process.env.NEXT_DEMO_FRONTEND_URL as string,
   db: {
     url: process.env.NEXT_DEMO_DATABASE_URL as string,
   },
@@ -46,6 +45,7 @@ export const nextDemoConfig = {
       },
     },
     frontend: {
+      baseUrl: process.env.NEXT_DEMO_FRONTEND_URL as string,
       verifyEmailPath,
       resetPasswordPath,
     },

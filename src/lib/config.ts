@@ -1,5 +1,6 @@
 import dotenvx from "@dotenvx/dotenvx";
 import { APP_REQUIRED_ENV_VARIABLES } from "./constants.js";
+import { extractArrayfromString } from "./utils/index.js";
 
 /**
  * load environment
@@ -22,12 +23,13 @@ if (!!port && isNaN(Number(port))) {
   throw new Error();
 }
 
-const trustedOrigins = process.env.TRUSTED_ORIGINS?.replace(/,\s*$/, "").split(
-  ",",
+const trustedOrigins = extractArrayfromString(
+  process.env.TRUSTED_ORIGINS as string,
 );
 
 export const appConfig = {
   nodeEnv: process.env.NODE_ENV || "development",
+  host: process.env.HOST as string,
   port: Number(port) || 5000,
   trustedOrigins: trustedOrigins,
 };
