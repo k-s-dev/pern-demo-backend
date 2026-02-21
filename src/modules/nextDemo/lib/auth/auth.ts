@@ -19,7 +19,7 @@ export const nextDemoAuth = betterAuth({
     useSecureCookies: appConfig.nodeEnv === "production",
     crossSubDomainCookies: {
       enabled: appConfig.nodeEnv === "production",
-      domain: ".vercel.app",
+      domain: "pern-demo-backend.vercel.app",
     },
     defaultCookieAttributes: {
       partitioned: false,
