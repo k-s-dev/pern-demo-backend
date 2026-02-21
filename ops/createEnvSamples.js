@@ -28,7 +28,8 @@ function getEnvFiles(pattern) {
 
 function overwriteDstFiles(envFiles, dst) {
   const dstFiles = envFiles.map((envFile) => {
-    const dstFile = path.join(dst, envFile);
+    const dstFileName = envFile.replace("env", "sample")
+    const dstFile = path.join(dst, dstFileName);
     fs.copyFileSync(envFile, dstFile);
     return dstFile;
   });
