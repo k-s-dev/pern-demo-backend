@@ -19,10 +19,7 @@ export const nextDemoAuth = betterAuth({
     useSecureCookies: appConfig.nodeEnv === "production",
     crossSubDomainCookies: {
       enabled: appConfig.nodeEnv === "production",
-      domain: appConfig.host,
-    },
-    defaultCookieAttributes: {
-      sameSite: appConfig.nodeEnv === "production" ? "None" : "Lax",
+      domain: ".vercel.app",
     },
   },
   database: prismaAdapter(prisma, {
