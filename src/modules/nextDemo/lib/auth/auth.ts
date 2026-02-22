@@ -5,9 +5,8 @@ import { prisma } from "../db/service.js";
 import { nextDemoConfig } from "../config.js";
 import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
-import { openAPI } from "better-auth/plugins";
+import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
-import { appConfig } from "#/src/lib/config.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -15,17 +14,6 @@ export const nextDemoAuth = betterAuth({
   basePath: nextDemoConfig.auth.basePath,
   // REVIEW
   trustedOrigins: nextDemoConfig.auth.trustedOrigins,
-  advanced: {
-    useSecureCookies: appConfig.nodeEnv === "production",
-    crossSubDomainCookies: {
-      enabled: appConfig.nodeEnv === "production",
-      domain: "pern-demo-backend.vercel.app",
-    },
-    defaultCookieAttributes: {
-      partitioned: false,
-      sameSite: "None",
-    },
-  },
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -77,6 +65,31 @@ export const nextDemoAuth = betterAuth({
         input: false, // don't allow user to set role
       },
     },
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
+  },
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (
+        ctx.path.includes("/sign-in/email") ||
+        ctx.path.includes("/sign-in/social") ||
+        ctx.path.includes("/next-demo/api/auth/callback")
+      ) {
+        return ctx.json({
+          original: ctx.context.returned,
+          setCookie: ctx.context.responseHeaders?.get("set-cookie"),
+          // TODO: remove cookie if not needed
+          cookie: {
+            name: ctx.context.authCookies.sessionToken.name,
+            options: ctx.context.authCookies.sessionToken.attributes,
+            expiresIn: ctx.context.options.session?.expiresIn,
+            updateAge: ctx.context.options.session?.updateAge,
+          },
+        });
+      }
+    }),
   },
   plugins: [openAPI()],
 });
