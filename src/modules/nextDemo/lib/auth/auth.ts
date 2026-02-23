@@ -7,6 +7,7 @@ import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
 import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
+import { parseSetCookie } from "cookie";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -78,11 +79,15 @@ export const nextDemoAuth = betterAuth({
       ) {
         if (!(ctx.context.returned instanceof APIError)) {
           const returned = ctx.context.returned as object;
+          const parsedSetCookie = parseSetCookie(
+            ctx.context.responseHeaders?.get("set-cookie") as string,
+          );
           const responseBody = {
             ...returned,
-            setCookie: ctx.context.responseHeaders?.get("set-cookie"),
+            session: ctx.context.newSession?.session,
+            token: parsedSetCookie.value,
           };
-          return ctx.json(responseBody);
+          return responseBody;
         }
       }
     }),
