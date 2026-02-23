@@ -1,4 +1,4 @@
-import { betterAuth } from "better-auth";
+import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { hashPassword, verifyPassword } from "./password.js";
 import { prisma } from "../db/service.js";
@@ -74,22 +74,21 @@ export const nextDemoAuth = betterAuth({
     after: createAuthMiddleware(async (ctx) => {
       if (
         ctx.path.includes("/sign-in/email") ||
-        ctx.path.includes("/sign-in/social") ||
-        ctx.path.includes("/next-demo/api/auth/callback")
+        ctx.path.includes("/sign-in/social")
       ) {
-        return ctx.json({
-          original: ctx.context.returned,
-          setCookie: ctx.context.responseHeaders?.get("set-cookie"),
-          // TODO: remove cookie if not needed
-          cookie: {
-            name: ctx.context.authCookies.sessionToken.name,
-            options: ctx.context.authCookies.sessionToken.attributes,
-            expiresIn: ctx.context.options.session?.expiresIn,
-            updateAge: ctx.context.options.session?.updateAge,
-          },
-        });
+        if (!(ctx.context.returned instanceof APIError)) {
+          const returned = ctx.context.returned as object;
+          const responseBody = {
+            ...returned,
+            setCookie: ctx.context.responseHeaders?.get("set-cookie"),
+          };
+          return ctx.json(responseBody);
+        }
       }
     }),
+  },
+  onAPIError: {
+    errorURL: nextDemoConfig.auth.frontend.baseUrl + "/auth-error",
   },
   plugins: [openAPI()],
 });
