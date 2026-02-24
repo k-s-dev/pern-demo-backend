@@ -8,6 +8,8 @@ import { logger } from "#/src/lib/logger/service.js";
 import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
 import { parseSetCookie } from "cookie";
+import { getOAuthState } from "better-auth/api";
+import { extractCookiefromSetCookies } from "#/src/lib/utils/cookies.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -91,15 +93,49 @@ export const nextDemoAuth = betterAuth({
           return responseBody;
         }
       }
+
+      if (ctx.path === "/callback/:id") {
+        const additionalData = await getOAuthState();
+        if (!additionalData) {
+          ctx.redirect(
+            (ctx.context.options.onAPIError?.errorURL as string) +
+              `?error=${JSON.stringify(additionalData)}`,
+          );
+          throw new APIError("INTERNAL_SERVER_ERROR");
+        }
+        const setCookies = ctx.context.responseHeaders?.getSetCookie();
+        if (!setCookies || setCookies.length <= 0) {
+          ctx.redirect(
+            (ctx.context.options.onAPIError?.errorURL as string) +
+              `?error=${JSON.stringify(setCookies)}`,
+          );
+          ctx.redirect(ctx.context.options.onAPIError?.errorURL as string);
+          throw new APIError("INTERNAL_SERVER_ERROR");
+        }
+        const sessionToken = extractCookiefromSetCookies(
+          setCookies,
+          ctx.context.authCookies.sessionToken.name,
+        );
+        if (!sessionToken || !additionalData?.callbackURL) {
+          ctx.redirect(
+            (ctx.context.options.onAPIError?.errorURL as string) +
+              `?error=${JSON.stringify(sessionToken)}`,
+          );
+          ctx.redirect(ctx.context.options.onAPIError?.errorURL as string);
+          throw new APIError("INTERNAL_SERVER_ERROR");
+        }
+        ctx.redirect(
+          additionalData.callbackURL +
+            `?session_token=${sessionToken};callbackURL=${additionalData.callbackURL}`,
+        );
+      }
     }),
   },
   advanced: {
     crossSubDomainCookies: {
       enabled: true,
-      domain: nextDemoConfig.auth.frontend.baseUrl,
     },
     defaultCookieAttributes: {
-      domain: nextDemoConfig.auth.frontend.baseUrl,
       sameSite: "None",
       secure: true,
       httpOnly: true,
