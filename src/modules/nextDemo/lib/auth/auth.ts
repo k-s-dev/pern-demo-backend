@@ -86,11 +86,24 @@ export const nextDemoAuth = betterAuth({
             ...returned,
             session: ctx.context.newSession?.session,
             token: parsedSetCookie.value,
+            cookieName: parsedSetCookie.name,
           };
           return responseBody;
         }
       }
     }),
+  },
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: nextDemoConfig.auth.frontend.baseUrl,
+    },
+    defaultCookieAttributes: {
+      domain: nextDemoConfig.auth.frontend.baseUrl,
+      sameSite: "None",
+      secure: true,
+      httpOnly: true,
+    },
   },
   onAPIError: {
     errorURL: nextDemoConfig.auth.frontend.baseUrl + "/auth-error",
