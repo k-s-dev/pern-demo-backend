@@ -8,8 +8,6 @@ import { logger } from "#/src/lib/logger/service.js";
 import { createAuthMiddleware, openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
 import { parseSetCookie } from "cookie";
-import { getOAuthState } from "better-auth/api";
-import { extractCookiefromSetCookies } from "#/src/lib/utils/cookies.js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
@@ -92,28 +90,6 @@ export const nextDemoAuth = betterAuth({
           };
           return responseBody;
         }
-      }
-
-      if (ctx.path === "/callback/:id") {
-        const additionalData = await getOAuthState();
-        if (!additionalData) {
-          throw new APIError("INTERNAL_SERVER_ERROR");
-        }
-        const setCookies = ctx.context.responseHeaders?.getSetCookie();
-        if (!setCookies || setCookies.length <= 0) {
-          throw new APIError("INTERNAL_SERVER_ERROR");
-        }
-        const sessionToken = extractCookiefromSetCookies(
-          setCookies,
-          ctx.context.authCookies.sessionToken.name,
-        );
-        if (!sessionToken || !additionalData?.callbackURL) {
-          throw new APIError("INTERNAL_SERVER_ERROR");
-        }
-        ctx.redirect(
-          additionalData.callbackURL +
-            `?session_token=${sessionToken};callbackURL=${additionalData.callbackURL}`,
-        );
       }
     }),
   },
