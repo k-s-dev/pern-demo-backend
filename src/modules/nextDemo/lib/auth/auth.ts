@@ -97,19 +97,10 @@ export const nextDemoAuth = betterAuth({
       if (ctx.path === "/callback/:id") {
         const additionalData = await getOAuthState();
         if (!additionalData) {
-          ctx.redirect(
-            (ctx.context.options.onAPIError?.errorURL as string) +
-              `?error=${JSON.stringify(additionalData)}`,
-          );
           throw new APIError("INTERNAL_SERVER_ERROR");
         }
         const setCookies = ctx.context.responseHeaders?.getSetCookie();
         if (!setCookies || setCookies.length <= 0) {
-          ctx.redirect(
-            (ctx.context.options.onAPIError?.errorURL as string) +
-              `?error=${JSON.stringify(setCookies)}`,
-          );
-          ctx.redirect(ctx.context.options.onAPIError?.errorURL as string);
           throw new APIError("INTERNAL_SERVER_ERROR");
         }
         const sessionToken = extractCookiefromSetCookies(
@@ -117,11 +108,6 @@ export const nextDemoAuth = betterAuth({
           ctx.context.authCookies.sessionToken.name,
         );
         if (!sessionToken || !additionalData?.callbackURL) {
-          ctx.redirect(
-            (ctx.context.options.onAPIError?.errorURL as string) +
-              `?error=${JSON.stringify(sessionToken)}`,
-          );
-          ctx.redirect(ctx.context.options.onAPIError?.errorURL as string);
           throw new APIError("INTERNAL_SERVER_ERROR");
         }
         ctx.redirect(
@@ -139,6 +125,7 @@ export const nextDemoAuth = betterAuth({
       sameSite: "None",
       secure: true,
       httpOnly: true,
+      partitioned: false,
     },
   },
   onAPIError: {
