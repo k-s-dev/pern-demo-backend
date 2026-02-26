@@ -1,21 +1,18 @@
-import { APIError, betterAuth } from "better-auth";
+import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { hashPassword, verifyPassword } from "./password.js";
+import { hashPassword, verifyPassword } from "./utils/password.js";
+import { sendVerificationEmail } from "./utils/verification.email.service.js";
 import { prisma } from "../db/service.js";
 import { nextDemoConfig } from "../config.js";
-import { sendVerificationEmail } from "./verification.email.service.js";
 import { logger } from "#/src/lib/logger/service.js";
-import { createAuthMiddleware, openAPI } from "better-auth/plugins";
+import { openAPI } from "better-auth/plugins";
 import { USER_ROLE } from "../definitions/prisma/enums.js";
-import { parseSetCookie } from "cookie";
-import { extractCookiefromSetCookies } from "#/src/lib/utils/cookies.js";
-import { getOAuthState } from "better-auth/api";
+import { nextCookies } from "better-auth/next-js";
 
 export const nextDemoAuth = betterAuth({
   secret: nextDemoConfig.auth.secret,
   baseURL: nextDemoConfig.auth.baseUrl,
   basePath: nextDemoConfig.auth.basePath,
-  // REVIEW
   trustedOrigins: nextDemoConfig.auth.trustedOrigins,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -36,10 +33,7 @@ export const nextDemoAuth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     password: { hash: hashPassword, verify: verifyPassword },
-    sendResetPassword: async ({ user, token }) => {
-      const frontendUrl = nextDemoConfig.auth.frontend.baseUrl;
-      const resetPasswordPath = nextDemoConfig.auth.frontend.resetPasswordPath;
-      const url = `${frontendUrl}/${resetPasswordPath}/?token=${token}`;
+    sendResetPassword: async ({ user, url }) => {
       await sendVerificationEmail(user.email, url, "RESET_PASSWORD");
       logger.info(`Reset password url for ${user.name}: ${url}`);
     },
@@ -47,11 +41,8 @@ export const nextDemoAuth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: false,
-    sendVerificationEmail: async ({ user, token }) => {
+    sendVerificationEmail: async ({ user, url }) => {
       if (!user.emailVerified) {
-        const frontendUrl = nextDemoConfig.auth.frontend.baseUrl;
-        const verifyEmailPath = nextDemoConfig.auth.frontend.verifyEmailPath;
-        const url = `${frontendUrl}/${verifyEmailPath}/?token=${token}`;
         await sendVerificationEmail(user.email, url, "EMAIL_VERIFICATION");
         logger.info(`Email verification url for ${user.email}: ${url}`);
       } else {
@@ -73,44 +64,6 @@ export const nextDemoAuth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
   },
-  hooks: {
-    after: createAuthMiddleware(async (ctx) => {
-      if (
-        ctx.path.includes("/sign-in/email") ||
-        ctx.path.includes("/sign-in/social")
-      ) {
-        if (!(ctx.context.returned instanceof APIError)) {
-          const returned = ctx.context.returned as object;
-          const parsedSetCookie = parseSetCookie(
-            ctx.context.responseHeaders?.get("set-cookie") as string,
-          );
-          const responseBody = {
-            ...returned,
-            session: ctx.context.newSession?.session,
-            token: parsedSetCookie.value,
-            cookieName: parsedSetCookie.name,
-          };
-          return responseBody;
-        }
-      }
-
-      if (ctx.path === "/callback/:id") {
-        const additionalData = await getOAuthState();
-
-        const setCookies = ctx.context.responseHeaders?.getSetCookie();
-        let sessionToken = null;
-        if (setCookies) {
-          sessionToken = extractCookiefromSetCookies(
-            setCookies,
-            ctx.context.authCookies.sessionToken.name,
-          );
-        }
-        if (additionalData && sessionToken) {
-          ctx.context.responseHeaders?.set("session-token", sessionToken)
-        }
-      }
-    }),
-  },
   advanced: {
     crossSubDomainCookies: {
       enabled: true,
@@ -125,5 +78,9 @@ export const nextDemoAuth = betterAuth({
   onAPIError: {
     errorURL: nextDemoConfig.auth.frontend.baseUrl + "/auth-error",
   },
-  plugins: [openAPI()],
+  plugins: [
+    openAPI(),
+    // next has to be last
+    nextCookies(),
+  ],
 });
