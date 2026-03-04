@@ -1,0 +1,35 @@
+import dotenvx from "@dotenvx/dotenvx";
+import { APP_REQUIRED_ENV_VARIABLES } from "./constants.js";
+import { extractArrayfromString } from "./utils/index.js";
+
+/**
+ * load environment
+ * requires NODE_ENV to be set
+ * currently set using cross-env in `package.json` scripts
+ */
+dotenvx.config({ convention: "nextjs" });
+
+APP_REQUIRED_ENV_VARIABLES.forEach((variable) => {
+  const value = process.env[variable];
+  if (!value || value === "") {
+    console.log(`Environment variable missing: ${variable}`);
+    throw new Error();
+  }
+});
+
+const port = process.env.PORT;
+if (!!port && isNaN(Number(port))) {
+  console.log("Environment error: port has to be a number");
+  throw new Error();
+}
+
+const trustedOrigins = extractArrayfromString(
+  process.env.TRUSTED_ORIGINS as string,
+);
+
+export const appConfig = {
+  nodeEnv: process.env.NODE_ENV || "development",
+  host: process.env.HOST as string,
+  port: Number(port) || 5000,
+  trustedOrigins: trustedOrigins,
+};

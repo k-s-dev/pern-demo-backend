@@ -1,0 +1,54 @@
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import { pinoHttp } from "pino-http";
+import { toNodeHandler } from "better-auth/node";
+import { logger } from "./lib/logger/service.js";
+import { appRouter } from "./lib/routes.js";
+import { errorHandler } from "./lib/error/errorHandler.js";
+import { pernDemoAuth } from "./modules/pernDemo/lib/auth/auth.js";
+import { appConfig } from "./lib/config.js";
+
+const app = express();
+
+// middleware
+app.use(pinoHttp({ logger }));
+
+app.use(
+  cors({
+    // REVIEW
+    origin: appConfig.trustedOrigins,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  }),
+);
+
+/**
+ * better-auth middleware has to be after cors middleware
+ * and before helmet, parser middleware[s] (express.json)
+ */
+app.all("/next-demo/api/auth/{*any}", toNodeHandler(pernDemoAuth));
+
+app.use(helmet());
+app.use(express.json());
+
+// -- routes
+app.use(appRouter);
+
+// -- error handler
+// needs to be the last middleware
+app.use(errorHandler);
+
+if (appConfig.nodeEnv === "development") {
+  const server = app.listen(appConfig.port, "0.0.0.0", () => {
+    const addressInfo = server.address();
+    logger.info(`Server is running on ${JSON.stringify(addressInfo)}`);
+  });
+} else {
+  const server = app.listen(appConfig.port, () => {
+    const addressInfo = server.address();
+    logger.info(`Server is running on ${JSON.stringify(addressInfo)}`);
+  });
+}
+
+export default app;
