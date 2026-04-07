@@ -3,9 +3,10 @@ import { HttpStatus, httpStatusTextByCode } from "http-status-ts";
 /**
  * Custom error for api errors.
  *
- * @param message - public message for use in frontend
+ * @param message - public message for use in frontend, summary of output
  * @param status - HttpStatus enum for use in error handling
  * @param path - request path
+ * @param messages - public message for use in frontend, specific errors encountered
  * @param log - object with details for server logging
  * @returns custom Error object
  *
@@ -15,31 +16,28 @@ import { HttpStatus, httpStatusTextByCode } from "http-status-ts";
  * ```
  */
 export class ApiError extends Error {
-  success: boolean;
-  path: string;
   statusCode: HttpStatus;
-  errors?: object | string[];
+  path?: string;
+  messages?: object | string[];
   log?: IErrorLog;
 
   constructor(args: IApiErrorArgs) {
     super(args.message, args.options);
     this.name = this.constructor.name;
-    this.success = false;
-    this.path = args.path;
     this.statusCode = args.statusCode;
-    this.errors = args.errors || {};
+    if (args.path) this.path = args.path;
+    this.messages = args.messages || [];
     this.log = {
-      message: args.log?.message || args.message,
+      messages: args.log?.messages || args.messages || [],
       data: JSON.stringify(args.log?.data),
     };
   }
 
   get response() {
     return {
-      success: this.success,
       statusCode: this.statusCode,
       message: this.message,
-      errors: this.errors,
+      messages: this.messages,
     };
   }
 }
@@ -96,22 +94,23 @@ export class NotFoundError extends ApiError {
 }
 
 export interface IErrorLog {
-  message?: string;
+  messages?: object | string[];
   data?: object | string;
 }
 
 export interface IApiErrorArgs {
-  path: string;
   message: string;
   statusCode: HttpStatus;
-  errors?: object | string[];
+  path?: string;
+  messages?: object | string[];
   log?: IErrorLog;
   options?: ErrorOptions;
 }
 
 export interface IApiErrorOptionalArgs {
-  path: string;
+  path?: string;
   message?: string;
+  messages?: object | string[];
   statusCode?: HttpStatus;
   errors?: object | string[];
   log?: IErrorLog;

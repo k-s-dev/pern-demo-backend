@@ -1,0 +1,14 @@
+# Express APP
+HOST=
+## cors
+### comma separated list of frontend origins
+TRUSTED_ORIGINS=
+
+# Next Demo API
+## db
+PERN_DEMO_DATABASE_URL=
+## auth
+PERN_DEMO_AUTH_TRUSTED_ORIGINS=
+### auth base url same as host
+PERN_DEMO_AUTH_BASE_URL=
+PERN_DEMO_FRONTEND_URL=

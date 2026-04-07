@@ -6,6 +6,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node", // Essential for backend testing
+    setupFiles: ["./src/tests/vitest/setupFile.ts"],
+    globalSetup: "./src/tests/vitest/globalSetup.ts",
+    allowOnly: true,
   },
   resolve: {
     alias: {

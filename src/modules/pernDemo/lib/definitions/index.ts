@@ -6,7 +6,7 @@ export const STRING_LENGTH_MD = 300;
 export const STRING_LENGTH_LG = 1000;
 export const STRING_LENGTH_XL = 3000;
 
-export const SDbId = v.pipe(v.string(), v.uuid());
+export const SDbId = v.pipe(v.string(), v.nonEmpty("Id cannot be empty."));
 
 export const SName = v.pipe(
   v.string(),
@@ -41,3 +41,5 @@ export const SImageUrl = v.pipe(
   v.nonEmpty(),
   v.maxLength(STRING_LENGTH_MD),
 );
+
+export const SOptionalDate = v.exactOptional(v.nullable(v.date()), null);

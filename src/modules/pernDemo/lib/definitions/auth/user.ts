@@ -2,7 +2,7 @@ import * as v from "valibot";
 import type { USER_ROLE } from "../prisma/enums.js";
 import { USER_ROLE as EUserRole } from "../prisma/enums.js";
 import type { User } from "../prisma/client.js";
-import { SDbId, SEmail, SImageUrl, SName, SPassword } from "../generic.js";
+import { SDbId, SEmail, SImageUrl, SName, SPassword } from "../index.js";
 
 export type TUserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
 

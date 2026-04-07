@@ -9,6 +9,6 @@ export default defineConfig({
     path: "./migrations",
   },
   datasource: {
-    url: process.env.NEXT_DEMO_DATABASE_URL as string,
+    url: process.env.PERN_DEMO_DATABASE_URL as string,
   },
 });

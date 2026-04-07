@@ -5,8 +5,8 @@ import {
   type Response,
 } from "express";
 import * as v from "valibot";
-import type { ValibotObjectSchema } from "./definitions.js";
 import { ApiValidationError } from "../error/definitions.js";
+import type { ValibotObjectSchema } from "../definitions/index.js";
 
 export const validateBody = <GenericBodySchema extends ValibotObjectSchema>(
   schema: GenericBodySchema,
@@ -22,7 +22,7 @@ export const validateBody = <GenericBodySchema extends ValibotObjectSchema>(
       throw new ApiValidationError({
         path: req.path,
         message: "Validation failed for request body.",
-        errors: v.flatten(result.issues),
+        messages: v.flatten(result.issues),
       });
     }
 

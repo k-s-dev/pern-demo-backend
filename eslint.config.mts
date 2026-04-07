@@ -15,4 +15,20 @@ export default defineConfig([
   tseslint.configs.recommended,
   eslintConfigPrettier,
   vitest.configs.recommended,
+  {
+    rules: {
+      // Disable the base ESLint rule
+      "no-unused-vars": "off",
+      // Enable the TypeScript-specific rule with ignore patterns
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
 ]);

@@ -7,4 +7,4 @@ appRouter.get("/", (_req, res) => {
   res.json("Welcome to express app.");
 });
 
-appRouter.use("/next-demo", pernDemoRouter);
+appRouter.use("/pern-demo", pernDemoRouter);

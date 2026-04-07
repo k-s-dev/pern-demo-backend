@@ -1,0 +1,29 @@
+import { appConfig } from "#/src/lib/config.js";
+
+export const PERN_DEMO_REQUIRED_ENV_VARIABLES = [
+  // base env
+  "PERN_DEMO_APP_NAME",
+  "PERN_DEMO_AUTH_SECRET",
+  "PERN_DEMO_AUTH_GOOGLE_ID",
+  "PERN_DEMO_AUTH_GOOGLE_SECRET",
+  "PERN_DEMO_AUTH_GITHUB_ID",
+  "PERN_DEMO_AUTH_GITHUB_SECRET",
+  "PERN_DEMO_EMAIL_ID",
+  "PERN_DEMO_EMAIL_PASSWORD",
+  // NODE_ENV specific
+  "PERN_DEMO_DATABASE_URL",
+  "PERN_DEMO_AUTH_TRUSTED_ORIGINS",
+  "PERN_DEMO_AUTH_BASE_PATH",
+  "PERN_DEMO_AUTH_FRONTEND_VERIFY_EMAIL_PATH",
+  "PERN_DEMO_AUTH_FRONTEND_RESET_PASSWORD_PATH",
+  "PERN_DEMO_FRONTEND_URL",
+];
+
+export const MAX_MODEL_ROWS_PER_USER = {
+  workspace: appConfig.nodeEnv === "test" ? 100 : 10,
+  tag: 1000,
+  category: 100,
+  status: 100,
+  priority: 100,
+  task: 10000,
+};

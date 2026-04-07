@@ -1,8 +1,8 @@
-import * as fs from 'node:fs'
-import * as path from 'path'
+import * as fs from "node:fs";
+import * as path from "path";
 
 const DST_DIR = "env_samples";
-const GLOB_PATTERN=".env*"
+const GLOB_PATTERN = ".env*";
 
 main();
 
@@ -28,7 +28,8 @@ function getEnvFiles(pattern) {
 
 function overwriteDstFiles(envFiles, dst) {
   const dstFiles = envFiles.map((envFile) => {
-    const dstFile = path.join(dst, envFile + ".sample");
+    const dstFileName = envFile.replace("env", "sample");
+    const dstFile = path.join(dst, dstFileName);
     fs.copyFileSync(envFile, dstFile);
     return dstFile;
   });
@@ -49,7 +50,7 @@ function refactorDstFiles(dstFiles) {
     });
     newContent = newContent.join("\n");
     fs.writeFileSync(f, newContent, {
-      flag: "w+"
+      flag: "w+",
     });
   });
 }

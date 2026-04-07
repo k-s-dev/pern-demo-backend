@@ -8,6 +8,7 @@ import { appRouter } from "./lib/routes.js";
 import { errorHandler } from "./lib/error/errorHandler.js";
 import { pernDemoAuth } from "./modules/pernDemo/lib/auth/auth.js";
 import { appConfig } from "./lib/config.js";
+import { pernDemoConfig } from "./modules/pernDemo/lib/config.js";
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.use(
  * better-auth middleware has to be after cors middleware
  * and before helmet, parser middleware[s] (express.json)
  */
-app.all("/next-demo/api/auth/{*any}", toNodeHandler(pernDemoAuth));
+app.all(`${pernDemoConfig.auth.basePath}/{*any}`, toNodeHandler(pernDemoAuth));
 
 app.use(helmet());
 app.use(express.json());

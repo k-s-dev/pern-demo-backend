@@ -58,6 +58,13 @@ export const ModelName = {
   Session: "Session",
   Account: "Account",
   Verification: "Verification",
+  OrgUser: "OrgUser",
+  Tag: "Tag",
+  Workspace: "Workspace",
+  Category: "Category",
+  Priority: "Priority",
+  Status: "Status",
+  Task: "Task",
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -134,6 +141,101 @@ export const VerificationScalarFieldEnum = {
 
 export type VerificationScalarFieldEnum =
   (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum];
+
+export const OrgUserScalarFieldEnum = {
+  userId: "userId",
+} as const;
+
+export type OrgUserScalarFieldEnum =
+  (typeof OrgUserScalarFieldEnum)[keyof typeof OrgUserScalarFieldEnum];
+
+export const TagScalarFieldEnum = {
+  id: "id",
+  name: "name",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  createdById: "createdById",
+} as const;
+
+export type TagScalarFieldEnum =
+  (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum];
+
+export const WorkspaceScalarFieldEnum = {
+  id: "id",
+  name: "name",
+  description: "description",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  createdById: "createdById",
+} as const;
+
+export type WorkspaceScalarFieldEnum =
+  (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum];
+
+export const CategoryScalarFieldEnum = {
+  id: "id",
+  name: "name",
+  description: "description",
+  order: "order",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  parentId: "parentId",
+  workspaceId: "workspaceId",
+} as const;
+
+export type CategoryScalarFieldEnum =
+  (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum];
+
+export const PriorityScalarFieldEnum = {
+  id: "id",
+  name: "name",
+  code: "code",
+  order: "order",
+  group: "group",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  workspaceId: "workspaceId",
+} as const;
+
+export type PriorityScalarFieldEnum =
+  (typeof PriorityScalarFieldEnum)[keyof typeof PriorityScalarFieldEnum];
+
+export const StatusScalarFieldEnum = {
+  id: "id",
+  name: "name",
+  order: "order",
+  code: "code",
+  group: "group",
+  isCompletion: "isCompletion",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  workspaceId: "workspaceId",
+} as const;
+
+export type StatusScalarFieldEnum =
+  (typeof StatusScalarFieldEnum)[keyof typeof StatusScalarFieldEnum];
+
+export const TaskScalarFieldEnum = {
+  id: "id",
+  title: "title",
+  description: "description",
+  is_archived: "is_archived",
+  archive_on_completion: "archive_on_completion",
+  start_date: "start_date",
+  end_date: "end_date",
+  estimated_start: "estimated_start",
+  estimated_end: "estimated_end",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  createdById: "createdById",
+  parentId: "parentId",
+  categoryId: "categoryId",
+  priorityId: "priorityId",
+  statusId: "statusId",
+} as const;
+
+export type TaskScalarFieldEnum =
+  (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum];
 
 export const SortOrder = {
   asc: "asc",

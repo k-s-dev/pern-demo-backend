@@ -12,7 +12,12 @@ const transport = pino.transport({
     },
     {
       target: appConfig.nodeEnv === "development" ? "pino-pretty" : "pino/file",
-      level: appConfig.nodeEnv === "development" ? "debug" : "error",
+      level:
+        appConfig.nodeEnv === "development"
+          ? "debug"
+          : appConfig.nodeEnv === "test"
+            ? "silent"
+            : "error",
       options: {
         destination: 1,
         colorize: true,

@@ -64,3 +64,38 @@ export type Account = Prisma.AccountModel;
  *
  */
 export type Verification = Prisma.VerificationModel;
+/**
+ * Model OrgUser
+ *
+ */
+export type OrgUser = Prisma.OrgUserModel;
+/**
+ * Model Tag
+ *
+ */
+export type Tag = Prisma.TagModel;
+/**
+ * Model Workspace
+ *
+ */
+export type Workspace = Prisma.WorkspaceModel;
+/**
+ * Model Category
+ *
+ */
+export type Category = Prisma.CategoryModel;
+/**
+ * Model Priority
+ *
+ */
+export type Priority = Prisma.PriorityModel;
+/**
+ * Model Status
+ *
+ */
+export type Status = Prisma.StatusModel;
+/**
+ * Model Task
+ *
+ */
+export type Task = Prisma.TaskModel;
