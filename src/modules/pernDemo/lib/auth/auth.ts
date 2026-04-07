@@ -75,9 +75,6 @@ export const pernDemoAuth = betterAuth({
       partitioned: false,
     },
   },
-  onAPIError: {
-    errorURL: pernDemoConfig.auth.frontend.baseUrl + "/auth-error",
-  },
   plugins: [
     openAPI(),
     // next has to be last

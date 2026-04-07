@@ -4,7 +4,7 @@ HOST=
 ### comma separated list of frontend origins
 TRUSTED_ORIGINS=
 
-# Next Demo API
+# Pern Demo API
 ## db
 PERN_DEMO_DATABASE_URL=
 ## auth

@@ -1,4 +1,4 @@
-import { cleanSlashes, extractArrayfromString } from "#/src/lib/utils/index.js";
+import { extractArrayfromString } from "#/src/lib/utils/index.js";
 import dotenvx from "@dotenvx/dotenvx";
 import { PERN_DEMO_REQUIRED_ENV_VARIABLES } from "./definitions/constants.js";
 
@@ -14,14 +14,6 @@ PERN_DEMO_REQUIRED_ENV_VARIABLES.forEach((variable) => {
 
 const trustedOrigins = extractArrayfromString(
   process.env.PERN_DEMO_AUTH_TRUSTED_ORIGINS as string,
-);
-
-const verifyEmailPath = cleanSlashes(
-  process.env.PERN_DEMO_AUTH_FRONTEND_VERIFY_EMAIL_PATH as string,
-);
-
-const resetPasswordPath = cleanSlashes(
-  process.env.PERN_DEMO_AUTH_FRONTEND_RESET_PASSWORD_PATH as string,
 );
 
 export const pernDemoConfig = {
@@ -43,11 +35,6 @@ export const pernDemoConfig = {
         id: process.env.PERN_DEMO_AUTH_GITHUB_ID as string,
         secret: process.env.PERN_DEMO_AUTH_GITHUB_SECRET as string,
       },
-    },
-    frontend: {
-      baseUrl: process.env.PERN_DEMO_FRONTEND_URL as string,
-      verifyEmailPath,
-      resetPasswordPath,
     },
   },
   email: {
