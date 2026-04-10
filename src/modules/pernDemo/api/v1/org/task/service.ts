@@ -97,9 +97,30 @@ export class TaskService {
     sessionUser: TSessionUser,
     dataIn: TTaskUpdatePatchDataIn | TTaskUpdatePutDataIn,
   ) {
+    type TUpdateData =
+      | Omit<TTaskUpdatePatchDataIn, "tagIds">
+      | Omit<TTaskUpdatePutDataIn, "tagIds">;
+    const updateData = Object.fromEntries(
+      Object.entries(dataIn).filter(([k]) => {
+        return k !== "tagIds";
+      }),
+    ) as unknown as TUpdateData;
+    const tags = [] as Tag[];
+    if (dataIn.tagIds && dataIn.tagIds?.length > 0) {
+      for (const id of dataIn.tagIds) {
+        const tag = await tagService.getById(id, sessionUser);
+        tags.push(tag);
+      }
+    }
+
     const task = await prisma.task.update({
       where: { id },
-      data: excludeUndefinedKeys(dataIn),
+      data: {
+        ...excludeUndefinedKeys(updateData),
+        tags: {
+          connect: tags,
+        },
+      },
       include: taskIncludeAll,
     });
 
