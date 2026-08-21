@@ -1,47 +1,46 @@
 import type { TSessionUser } from "#/src/modules/pernDemo/lib/definitions/auth/user.js";
-import type { TPriorityIncludeAll } from "#/src/modules/pernDemo/lib/definitions/org/priority.js";
 
 export class PriorityAuthorization {
-  checkCreator(priority: TPriorityIncludeAll, sessionUser: TSessionUser) {
-    return priority.workspace.createdById === sessionUser.id;
+  checkCreator(createdById: string, sessionUser: TSessionUser) {
+    return createdById === sessionUser.id;
   }
 
-  create(priority: TPriorityIncludeAll, sessionUser: TSessionUser) {
-    return this.checkCreator(priority, sessionUser);
+  create() {
+    return true;
   }
 
   list() {
     return true;
   }
 
-  getById(priority: TPriorityIncludeAll, sessionUser: TSessionUser) {
+  getById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(priority, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPatch(priority: TPriorityIncludeAll, sessionUser: TSessionUser) {
+  updateByIdPatch(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(priority, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPut(priority: TPriorityIncludeAll, sessionUser: TSessionUser) {
+  updateByIdPut(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(priority, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  deleteById(priority: TPriorityIncludeAll, sessionUser: TSessionUser) {
+  deleteById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(priority, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }

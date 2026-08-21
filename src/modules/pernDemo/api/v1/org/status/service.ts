@@ -16,7 +16,12 @@ import { excludeUndefinedKeys } from "#/src/lib/utils/definitions.js";
 import { MAX_MODEL_ROWS_PER_USER } from "#/src/modules/pernDemo/lib/definitions/constants.js";
 
 export class StatusService {
-  async create(dataIn: TStatusCreateDataIn, sessionUser: TSessionUser) {
+  async create(dataIn: TStatusCreateDataIn) {
+    const isAuthorized = statusAuthorization.create();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const statusCount = await prisma.status.count({
       where: { workspaceId: dataIn.workspaceId },
     });
@@ -33,15 +38,15 @@ export class StatusService {
       include: statusIncludeAll,
     });
 
-    const isAuthorized = statusAuthorization.create(status, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return status;
   }
 
   async list(sessionUser: TSessionUser) {
+    const isAuthorized = statusAuthorization.list();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const statuses: TStatusIncludeAll[] = [];
     const workspaces = await prisma.workspace.findMany({
       where: { createdById: sessionUser.id },
@@ -57,11 +62,6 @@ export class StatusService {
       statuses.push(...workspacePriorties);
     }
 
-    const isAuthorized = statusAuthorization.list();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return statuses;
   }
 
@@ -71,7 +71,10 @@ export class StatusService {
       include: statusIncludeAll,
     });
 
-    const isAuthorized = statusAuthorization.getById(status, sessionUser);
+    const isAuthorized = statusAuthorization.getById(
+      status.workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
@@ -84,30 +87,40 @@ export class StatusService {
     sessionUser: TSessionUser,
     dataIn: TStatusUpdatePatchDataIn | TStatusUpdatePutDataIn,
   ) {
-    const status = await prisma.status.update({
+    let status = await statusService.getById(id, sessionUser);
+
+    const isAuthorized = statusAuthorization.getById(
+      status.workspace.createdById,
+      sessionUser,
+    );
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
+    status = await prisma.status.update({
       where: { id },
       data: excludeUndefinedKeys(dataIn),
       include: statusIncludeAll,
     });
 
-    const isAuthorized = statusAuthorization.getById(status, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return status;
   }
 
   async deleteById(id: string, sessionUser: TSessionUser) {
-    const status = await prisma.status.delete({
-      where: { id },
-      include: statusIncludeAll,
-    });
+    let status = await statusService.getById(id, sessionUser);
 
-    const isAuthorized = statusAuthorization.deleteById(status, sessionUser);
+    const isAuthorized = statusAuthorization.deleteById(
+      status.workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    status = await prisma.status.delete({
+      where: { id },
+      include: statusIncludeAll,
+    });
 
     return status;
   }

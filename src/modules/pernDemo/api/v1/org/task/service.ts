@@ -18,6 +18,11 @@ import type { Tag } from "#/src/modules/pernDemo/lib/definitions/prisma/client.j
 
 export class TaskService {
   async create(dataIn: TTaskCreateDataIn, sessionUser: TSessionUser) {
+    const isAuthorized = taskAuthorization.create();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const taskCount = await prisma.task.count({
       where: { createdById: sessionUser.id },
     });
@@ -54,26 +59,21 @@ export class TaskService {
       include: taskIncludeAll,
     });
 
-    const isAuthorized = taskAuthorization.create(task, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return task;
   }
 
   async list(sessionUser: TSessionUser) {
+    const isAuthorized = taskAuthorization.list();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const tasks = await prisma.task.findMany({
       where: {
         createdById: sessionUser.id,
       },
       include: taskIncludeAll,
     });
-
-    const isAuthorized = taskAuthorization.list();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
 
     return tasks;
   }
@@ -84,7 +84,10 @@ export class TaskService {
       include: taskIncludeAll,
     });
 
-    const isAuthorized = taskAuthorization.getById(task, sessionUser);
+    const isAuthorized = taskAuthorization.getById(
+      task.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
@@ -113,7 +116,16 @@ export class TaskService {
       }
     }
 
-    const task = await prisma.task.update({
+    let task = await taskService.getById(id, sessionUser);
+    const isAuthorized = taskAuthorization.getById(
+      task.createdById,
+      sessionUser,
+    );
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
+    task = await prisma.task.update({
       where: { id },
       data: {
         ...excludeUndefinedKeys(updateData),
@@ -124,24 +136,24 @@ export class TaskService {
       include: taskIncludeAll,
     });
 
-    const isAuthorized = taskAuthorization.getById(task, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return task;
   }
 
   async deleteById(id: string, sessionUser: TSessionUser) {
-    const task = await prisma.task.delete({
-      where: { id },
-      include: taskIncludeAll,
-    });
+    let task = await taskService.getById(id, sessionUser);
 
-    const isAuthorized = taskAuthorization.deleteById(task, sessionUser);
+    const isAuthorized = taskAuthorization.deleteById(
+      task.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    task = await prisma.task.delete({
+      where: { id },
+      include: taskIncludeAll,
+    });
 
     return task;
   }

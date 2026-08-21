@@ -16,7 +16,12 @@ import { excludeUndefinedKeys } from "#/src/lib/utils/definitions.js";
 import { MAX_MODEL_ROWS_PER_USER } from "#/src/modules/pernDemo/lib/definitions/constants.js";
 
 export class PriorityService {
-  async create(dataIn: TPriorityCreateDataIn, sessionUser: TSessionUser) {
+  async create(dataIn: TPriorityCreateDataIn) {
+    const isAuthorized = priorityAuthorization.create();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const priorityCount = await prisma.priority.count({
       where: { workspaceId: dataIn.workspaceId },
     });
@@ -32,11 +37,6 @@ export class PriorityService {
       data: dataIn,
       include: priorityIncludeAll,
     });
-
-    const isAuthorized = priorityAuthorization.create(priority, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
 
     return priority;
   }
@@ -71,7 +71,10 @@ export class PriorityService {
       include: priorityIncludeAll,
     });
 
-    const isAuthorized = priorityAuthorization.getById(priority, sessionUser);
+    const isAuthorized = priorityAuthorization.getById(
+      priority.workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
@@ -84,33 +87,40 @@ export class PriorityService {
     sessionUser: TSessionUser,
     dataIn: TPriorityUpdatePatchDataIn | TPriorityUpdatePutDataIn,
   ) {
-    const priority = await prisma.priority.update({
-      where: { id },
-      data: excludeUndefinedKeys(dataIn),
-      include: priorityIncludeAll,
-    });
+    let priority = await priorityService.getById(id, sessionUser);
 
-    const isAuthorized = priorityAuthorization.getById(priority, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
-    return priority;
-  }
-
-  async deleteById(id: string, sessionUser: TSessionUser) {
-    const priority = await prisma.priority.delete({
-      where: { id },
-      include: priorityIncludeAll,
-    });
-
-    const isAuthorized = priorityAuthorization.deleteById(
-      priority,
+    const isAuthorized = priorityAuthorization.getById(
+      priority.workspace.createdById,
       sessionUser,
     );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    priority = await prisma.priority.update({
+      where: { id },
+      data: excludeUndefinedKeys(dataIn),
+      include: priorityIncludeAll,
+    });
+
+    return priority;
+  }
+
+  async deleteById(id: string, sessionUser: TSessionUser) {
+    let priority = await priorityService.getById(id, sessionUser);
+
+    const isAuthorized = priorityAuthorization.deleteById(
+      priority.workspace.createdById,
+      sessionUser,
+    );
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
+    priority = await prisma.priority.delete({
+      where: { id },
+      include: priorityIncludeAll,
+    });
 
     return priority;
   }

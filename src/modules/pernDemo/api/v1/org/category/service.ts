@@ -16,7 +16,12 @@ import { excludeUndefinedKeys } from "#/src/lib/utils/definitions.js";
 import { MAX_MODEL_ROWS_PER_USER } from "#/src/modules/pernDemo/lib/definitions/constants.js";
 
 export class CategoryService {
-  async create(dataIn: TCategoryCreateDataIn, sessionUser: TSessionUser) {
+  async create(dataIn: TCategoryCreateDataIn) {
+    const isAuthorized = categoryAuthorization.create();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const categoryCount = await prisma.category.count({
       where: { workspaceId: dataIn.workspaceId },
     });
@@ -33,15 +38,15 @@ export class CategoryService {
       include: categoryIncludeAll,
     });
 
-    const isAuthorized = categoryAuthorization.create(category, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return category;
   }
 
   async list(sessionUser: TSessionUser) {
+    const isAuthorized = categoryAuthorization.list();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const categories: TCategoryIncludeAll[] = [];
     const workspaces = await prisma.workspace.findMany({
       where: { createdById: sessionUser.id },
@@ -57,11 +62,6 @@ export class CategoryService {
       categories.push(...workspacePriorties);
     }
 
-    const isAuthorized = categoryAuthorization.list();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return categories;
   }
 
@@ -71,7 +71,10 @@ export class CategoryService {
       include: categoryIncludeAll,
     });
 
-    const isAuthorized = categoryAuthorization.getById(category, sessionUser);
+    const isAuthorized = categoryAuthorization.getById(
+      category.workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
@@ -84,33 +87,40 @@ export class CategoryService {
     sessionUser: TSessionUser,
     dataIn: TCategoryUpdatePatchDataIn | TCategoryUpdatePutDataIn,
   ) {
-    const category = await prisma.category.update({
-      where: { id },
-      data: excludeUndefinedKeys(dataIn),
-      include: categoryIncludeAll,
-    });
+    let category = await categoryService.getById(id, sessionUser);
 
-    const isAuthorized = categoryAuthorization.getById(category, sessionUser);
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
-    return category;
-  }
-
-  async deleteById(id: string, sessionUser: TSessionUser) {
-    const category = await prisma.category.delete({
-      where: { id },
-      include: categoryIncludeAll,
-    });
-
-    const isAuthorized = categoryAuthorization.deleteById(
-      category,
+    const isAuthorized = categoryAuthorization.getById(
+      category.workspace.createdById,
       sessionUser,
     );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    category = await prisma.category.update({
+      where: { id },
+      data: excludeUndefinedKeys(dataIn),
+      include: categoryIncludeAll,
+    });
+
+    return category;
+  }
+
+  async deleteById(id: string, sessionUser: TSessionUser) {
+    let category = await categoryService.getById(id, sessionUser);
+
+    const isAuthorized = categoryAuthorization.deleteById(
+      category.workspace.createdById,
+      sessionUser,
+    );
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
+    category = await prisma.category.delete({
+      where: { id },
+      include: categoryIncludeAll,
+    });
 
     return category;
   }

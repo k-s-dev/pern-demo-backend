@@ -16,6 +16,11 @@ import { MAX_MODEL_ROWS_PER_USER } from "#/src/modules/pernDemo/lib/definitions/
 
 export class WorkspaceService {
   async create(dataIn: TWorkspaceCreateDataIn, sessionUser: TSessionUser) {
+    const isAuthorized = workspaceAuthorization.create();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     let orgUser;
     orgUser = await prisma.orgUser.findUnique({
       where: { userId: sessionUser.id },
@@ -70,26 +75,21 @@ export class WorkspaceService {
       include: workspaceIncludeAll,
     });
 
-    const isAuthorized = workspaceAuthorization.create();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return workspace;
   }
 
   async list(sessionUser: TSessionUser) {
+    const isAuthorized = workspaceAuthorization.list();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const workspaces = await prisma.workspace.findMany({
       where: {
         createdById: sessionUser.id,
       },
       include: workspaceIncludeAll,
     });
-
-    const isAuthorized = workspaceAuthorization.list();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
 
     return workspaces;
   }
@@ -100,7 +100,10 @@ export class WorkspaceService {
       include: workspaceIncludeAll,
     });
 
-    const isAuthorized = workspaceAuthorization.getById(workspace, sessionUser);
+    const isAuthorized = workspaceAuthorization.getById(
+      workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
@@ -113,29 +116,40 @@ export class WorkspaceService {
     sessionUser: TSessionUser,
     dataIn: TWorkspaceUpdatePatchDataIn | TWorkspaceUpdatePutDataIn,
   ) {
-    const workspace = await prisma.workspace.update({
-      where: { id },
-      data: excludeUndefinedKeys(dataIn),
-    });
+    let workspace = await workspaceService.getById(id, sessionUser);
 
-    const isAuthorized = workspaceAuthorization.getById(workspace, sessionUser);
+    const isAuthorized = workspaceAuthorization.getById(
+      workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    workspace = await prisma.workspace.update({
+      where: { id },
+      data: excludeUndefinedKeys(dataIn),
+      include: workspaceIncludeAll,
+    });
 
     return workspace;
   }
 
   async deleteById(id: string, sessionUser: TSessionUser) {
-    const workspace = await prisma.workspace.delete({
-      where: { id },
-      include: workspaceIncludeAll,
-    });
+    let workspace = await workspaceService.getById(id, sessionUser);
 
-    const isAuthorized = workspaceAuthorization.getById(workspace, sessionUser);
+    const isAuthorized = workspaceAuthorization.getById(
+      workspace.createdById,
+      sessionUser,
+    );
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    workspace = await prisma.workspace.delete({
+      where: { id },
+      include: workspaceIncludeAll,
+    });
 
     return workspace;
   }

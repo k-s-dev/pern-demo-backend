@@ -16,6 +16,11 @@ import { MAX_MODEL_ROWS_PER_USER } from "#/src/modules/pernDemo/lib/definitions/
 
 export class TagService {
   async create(dataIn: TTagCreateDataIn, sessionUser: TSessionUser) {
+    const isAuthorized = tagAuthorization.create();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const tagCount = await prisma.tag.count();
     if (tagCount >= MAX_MODEL_ROWS_PER_USER.tag) {
       throw new ApiValidationError({
@@ -35,26 +40,21 @@ export class TagService {
       },
     });
 
-    const isAuthorized = tagAuthorization.create();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
-
     return tag;
   }
 
   async list(sessionUser: TSessionUser) {
+    const isAuthorized = tagAuthorization.list();
+    if (!isAuthorized) {
+      throw new ApiAuthorizationError({});
+    }
+
     const tags = await prisma.tag.findMany({
       where: {
         createdById: sessionUser.id,
       },
       include: tagIncludeAll,
     });
-
-    const isAuthorized = tagAuthorization.list();
-    if (!isAuthorized) {
-      throw new ApiAuthorizationError({});
-    }
 
     return tags;
   }
@@ -65,7 +65,7 @@ export class TagService {
       include: tagIncludeAll,
     });
 
-    const isAuthorized = tagAuthorization.getById(tag, sessionUser);
+    const isAuthorized = tagAuthorization.getById(tag.createdById, sessionUser);
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
@@ -78,28 +78,34 @@ export class TagService {
     sessionUser: TSessionUser,
     dataIn: TTagUpdatePatchDataIn | TTagUpdatePutDataIn,
   ) {
-    const tag = await prisma.tag.update({
-      where: { id },
-      data: excludeUndefinedKeys(dataIn),
-    });
+    let tag = await tagService.getById(id, sessionUser);
 
-    const isAuthorized = tagAuthorization.getById(tag, sessionUser);
+    const isAuthorized = tagAuthorization.getById(tag.createdById, sessionUser);
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    tag = await prisma.tag.update({
+      where: { id },
+      data: excludeUndefinedKeys(dataIn),
+      include: tagIncludeAll,
+    });
 
     return tag;
   }
 
   async deleteById(id: string, sessionUser: TSessionUser) {
-    const tag = await prisma.tag.delete({
-      where: { id },
-    });
+    let tag = await tagService.getById(id, sessionUser);
 
-    const isAuthorized = tagAuthorization.getById(tag, sessionUser);
+    const isAuthorized = tagAuthorization.getById(tag.createdById, sessionUser);
     if (!isAuthorized) {
       throw new ApiAuthorizationError({});
     }
+
+    tag = await prisma.tag.delete({
+      where: { id },
+      include: tagIncludeAll,
+    });
 
     return tag;
   }

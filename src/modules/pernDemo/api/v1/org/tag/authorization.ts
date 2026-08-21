@@ -2,8 +2,8 @@ import type { TSessionUser } from "#/src/modules/pernDemo/lib/definitions/auth/u
 import type { Tag } from "#/src/modules/pernDemo/lib/definitions/prisma/client.js";
 
 export class TagAuthorization {
-  checkCreator(tag: Tag, sessionUser: TSessionUser) {
-    return tag.createdById === sessionUser.id;
+  checkCreator(createdById: string, sessionUser: TSessionUser) {
+    return createdById === sessionUser.id;
   }
 
   create() {
@@ -14,34 +14,34 @@ export class TagAuthorization {
     return true;
   }
 
-  getById(tag: Tag, sessionUser: TSessionUser) {
+  getById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(tag, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPatch(tag: Tag, sessionUser: TSessionUser) {
+  updateByIdPatch(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(tag, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPut(tag: Tag, sessionUser: TSessionUser) {
+  updateByIdPut(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(tag, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  deleteById(tag: Tag, sessionUser: TSessionUser) {
+  deleteById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(tag, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }

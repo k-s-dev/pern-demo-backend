@@ -1,47 +1,46 @@
 import type { TSessionUser } from "#/src/modules/pernDemo/lib/definitions/auth/user.js";
-import type { TCategoryIncludeAll } from "#/src/modules/pernDemo/lib/definitions/org/category.js";
 
 export class CategoryAuthorization {
-  checkCreator(category: TCategoryIncludeAll, sessionUser: TSessionUser) {
-    return category.workspace.createdById === sessionUser.id;
+  checkCreator(createdById: string, sessionUser: TSessionUser) {
+    return createdById === sessionUser.id;
   }
 
-  create(category: TCategoryIncludeAll, sessionUser: TSessionUser) {
-    return this.checkCreator(category, sessionUser);
+  create() {
+    return true;
   }
 
   list() {
     return true;
   }
 
-  getById(category: TCategoryIncludeAll, sessionUser: TSessionUser) {
+  getById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(category, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPatch(category: TCategoryIncludeAll, sessionUser: TSessionUser) {
+  updateByIdPatch(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(category, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPut(category: TCategoryIncludeAll, sessionUser: TSessionUser) {
+  updateByIdPut(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(category, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  deleteById(category: TCategoryIncludeAll, sessionUser: TSessionUser) {
+  deleteById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(category, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }

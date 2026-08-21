@@ -1,9 +1,8 @@
 import type { TSessionUser } from "#/src/modules/pernDemo/lib/definitions/auth/user.js";
-import type { Workspace } from "#/src/modules/pernDemo/lib/definitions/prisma/client.js";
 
 export class WorkspaceAuthorization {
-  checkCreator(workspace: Workspace, sessionUser: TSessionUser) {
-    return workspace.createdById === sessionUser.id;
+  checkCreator(createdById: string, sessionUser: TSessionUser) {
+    return createdById === sessionUser.id;
   }
 
   create() {
@@ -14,34 +13,34 @@ export class WorkspaceAuthorization {
     return true;
   }
 
-  getById(workspace: Workspace, sessionUser: TSessionUser) {
+  getById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(workspace, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPatch(workspace: Workspace, sessionUser: TSessionUser) {
+  updateByIdPatch(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(workspace, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  updateByIdPut(workspace: Workspace, sessionUser: TSessionUser) {
+  updateByIdPut(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(workspace, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
 
-  deleteById(workspace: Workspace, sessionUser: TSessionUser) {
+  deleteById(createdById: string, sessionUser: TSessionUser) {
     let isAuthorized = false;
 
-    isAuthorized = this.checkCreator(workspace, sessionUser);
+    isAuthorized = this.checkCreator(createdById, sessionUser);
 
     return isAuthorized;
   }
