@@ -15,7 +15,7 @@ export class PriorityController {
     req: Request<Request["params"], object, TPriorityCreateDataIn>,
     res: TAuthenticatedResponse,
   ) {
-    const priority = await priorityService.create(req.body, res.locals.user);
+    const priority = await priorityService.create(req.body);
     res.status(HttpStatus.CREATED).json(prepareApiResponse(priority));
   }
 

@@ -1,5 +1,4 @@
 import type { TSessionUser } from "#/src/modules/pernDemo/lib/definitions/auth/user.js";
-import type { Tag } from "#/src/modules/pernDemo/lib/definitions/prisma/client.js";
 
 export class TagAuthorization {
   checkCreator(createdById: string, sessionUser: TSessionUser) {

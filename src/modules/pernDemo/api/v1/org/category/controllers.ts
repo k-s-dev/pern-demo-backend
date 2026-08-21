@@ -15,7 +15,7 @@ export class CategoryController {
     req: Request<Request["params"], object, TCategoryCreateDataIn>,
     res: TAuthenticatedResponse,
   ) {
-    const category = await categoryService.create(req.body, res.locals.user);
+    const category = await categoryService.create(req.body);
     res.status(HttpStatus.CREATED).json(prepareApiResponse(category));
   }
 

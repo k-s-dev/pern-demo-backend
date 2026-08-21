@@ -15,7 +15,7 @@ export class StatusController {
     req: Request<Request["params"], object, TStatusCreateDataIn>,
     res: TAuthenticatedResponse,
   ) {
-    const status = await statusService.create(req.body, res.locals.user);
+    const status = await statusService.create(req.body);
     res.status(HttpStatus.CREATED).json(prepareApiResponse(status));
   }
 
